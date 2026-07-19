@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Ollie",
+  "version": "0.0.1",
+  "description": "A pixel-grid octopus companion for focus sessions.",
+  "permissions": [
+    "storage",
+    "alarms",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://api.openai.com/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Ollie",
+    "default_popup": "popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content/content-script.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+*.local
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Browser profiles and temporary output
+.chrome-profile/
+tmp/
+coverage/
