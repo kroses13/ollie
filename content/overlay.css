@@ -1,1 +1,36 @@
-/* Milestone 2: Shadow DOM overlay styles and host-page isolation. */
+.ollie-svg {
+  --ollie-outline: #302831;
+  --ollie-body: #ffc8c8;
+  --ollie-shade: #ed8588;
+  --ollie-highlight: #ffe3d5;
+  --ollie-eye: var(--ollie-outline);
+  --ollie-sucker: #fff0c9;
+
+  display: block;
+  overflow: visible;
+  shape-rendering: crispEdges;
+}
+
+.ollie-pixel--outline {
+  fill: var(--ollie-outline);
+}
+
+.ollie-pixel--body {
+  fill: var(--ollie-body);
+}
+
+.ollie-pixel--shade {
+  fill: var(--ollie-shade);
+}
+
+.ollie-pixel--highlight {
+  fill: var(--ollie-highlight);
+}
+
+.ollie-pixel--eye {
+  fill: var(--ollie-eye);
+}
+
+.ollie-pixel--sucker {
+  fill: var(--ollie-sucker);
+}

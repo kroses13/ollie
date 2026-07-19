@@ -13,6 +13,12 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 
 ## Milestone 2 — Core shell
 
+- [ ] The approved reference appears beside the production SVG in the preview.
+- [ ] The neutral SVG matches the approved silhouette, proportions, expression,
+      and palette as closely as practical on the fixed grid.
+- [ ] The 24px, 32px, and 48px previews have crisp pixel edges.
+- [ ] The action tentacle is a separate `#ollie-action-tentacle` SVG group.
+- [ ] Changing Ollie CSS variables recolours the expected pixel roles.
 - [ ] Start and stop a focus session from the popup.
 - [ ] Timer state is derived from a stored end timestamp.
 - [ ] The alarm completes the focus phase after the popup closes.

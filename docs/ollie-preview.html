@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ollie asset comparison</title>
+    <link rel="stylesheet" href="ollie-preview.css">
+  </head>
+  <body>
+    <main>
+      <h1>Ollie asset comparison</h1>
+      <p class="intro">Approved reference and role-grid SVG, followed by exact-width size checks.</p>
+
+      <section class="comparison">
+        <article class="panel">
+          <h2>Approved reference</h2>
+          <div class="artboard">
+            <img
+              class="reference-image"
+              src="reference/ollie-approved.png"
+              alt="Approved Ollie reference"
+            >
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>Production grid SVG</h2>
+          <div class="artboard" id="hero-preview"></div>
+        </article>
+      </section>
+
+      <section class="sizes" id="size-previews"></section>
+    </main>
+
+    <script type="module" src="ollie-preview.js"></script>
+  </body>
+</html>

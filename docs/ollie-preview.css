@@ -1,0 +1,141 @@
+:root {
+  color: #302831;
+  background: #f5f0ed;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 720px;
+}
+
+main {
+  width: min(1040px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 48px 0 64px;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 8px;
+  font-size: 28px;
+}
+
+.intro {
+  margin-bottom: 32px;
+  color: #675d63;
+}
+
+.comparison {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.panel,
+.size-card {
+  border: 1px solid #d9ceca;
+  border-radius: 12px;
+  background: #fffaf7;
+  box-shadow: 0 8px 24px rgb(48 40 49 / 8%);
+}
+
+.panel {
+  padding: 20px;
+}
+
+.panel h2 {
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+
+.artboard {
+  display: grid;
+  min-height: 340px;
+  overflow: hidden;
+  place-items: center;
+  position: relative;
+  border-radius: 8px;
+  background:
+    linear-gradient(rgb(255 255 255 / 14%), rgb(255 255 255 / 14%)),
+    #979797;
+}
+
+.reference-image {
+  display: block;
+  width: 680px;
+  max-width: none;
+  height: auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.hero-svg {
+  width: 336px;
+  height: 252px;
+}
+
+.sizes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.size-card {
+  display: grid;
+  min-height: 152px;
+  place-items: center;
+  padding: 20px;
+}
+
+.size-card p {
+  align-self: end;
+  margin: 12px 0 0;
+  color: #675d63;
+  font-size: 12px;
+}
+
+.ollie-svg {
+  --ollie-outline: #302831;
+  --ollie-body: #ffc8c8;
+  --ollie-shade: #ed8588;
+  --ollie-highlight: #ffe3d5;
+  --ollie-eye: var(--ollie-outline);
+  --ollie-sucker: #fff0c9;
+
+  display: block;
+  overflow: visible;
+  shape-rendering: crispEdges;
+}
+
+.ollie-pixel--outline,
+.ollie-pixel--eye {
+  fill: var(--ollie-outline);
+}
+
+.ollie-pixel--body {
+  fill: var(--ollie-body);
+}
+
+.ollie-pixel--shade {
+  fill: var(--ollie-shade);
+}
+
+.ollie-pixel--highlight {
+  fill: var(--ollie-highlight);
+}
+
+.ollie-pixel--sucker {
+  fill: var(--ollie-sucker);
+}

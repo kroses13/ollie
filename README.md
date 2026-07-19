@@ -7,7 +7,9 @@ breaks.
 
 ## Status
 
-Milestone 1 of 5: scaffold only. Product behavior has not been implemented.
+Milestone 2 visual-asset slice: the approved neutral Ollie pixel grid, standalone
+SVG, reusable renderer, and comparison preview are present. Timer logic,
+browser behavior, extension UI, and animation remain unimplemented.
 
 ## Planned milestones
 
@@ -41,9 +43,21 @@ The current scaffold loads, but its popup and page companion are placeholders.
 ## Repository layout
 
 - `background/` — service worker, sessions, tab monitoring, and OpenAI client
+- `assets/` — production-ready standalone Ollie SVG
 - `content/` — webpage overlay, pixel geometry, and animation styles
 - `popup/` — extension popup UI
 - `shared/` — shared constants, state, messages, storage, and validation
-- `docs/` — manual verification checklist
+- `docs/` — approved visual reference, comparison preview, and manual checklist
+
+## Ollie asset preview
+
+Serve the repository from any local static server, then open
+`docs/ollie-preview.html`. For example:
+
+```sh
+python3 -m http.server 4173 --bind 127.0.0.1
+```
+
+Then visit `http://127.0.0.1:4173/docs/ollie-preview.html`.
 
 See `AGENTS.md` for implementation rules and milestone boundaries.
