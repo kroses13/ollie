@@ -59,3 +59,22 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 - [ ] Changing colour persists and updates open tabs.
 - [ ] Ollie does not block ordinary page interaction.
 - [ ] A typical site, an SPA, and a restricted Chrome page fail or render cleanly.
+
+## Verification record — 2026-07-20
+
+Core Shell checks completed in the implementation environment:
+
+- Manifest JSON, JavaScript syntax, SVG XML, and Git whitespace checks pass.
+- Fixed-timestamp transition checks produce `focus`, then `break`, then `idle`.
+- The packaged popup layout and approved Ollie mark render correctly in a
+  browser preview.
+- Runtime source contains none of the deferred polish-pass concepts.
+
+Still requires manual verification after loading the unpacked extension in
+Chrome:
+
+- Alarm behavior while the popup is closed.
+- Best-effort recovery after suspending the service worker or restarting Chrome.
+- Shadow DOM injection, one-root enforcement, and idle bob on real host pages.
+- Focus-to-break broadcast updates across already-open eligible tabs.
+- Service-worker and content-script console inspection.

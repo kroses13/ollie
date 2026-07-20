@@ -7,9 +7,11 @@ breaks.
 
 ## Status
 
-Milestone 2 visual-asset slice: the approved neutral Ollie pixel grid, standalone
-SVG, reusable renderer, and comparison preview are present. Timer logic,
-browser behavior, extension UI, and animation remain unimplemented.
+Milestone 2 Core Shell is implemented: the approved neutral Ollie asset, popup
+controls, alarms-backed focus/break timer, Shadow DOM page injection, and idle
+bob are present. Cross-tab distraction logic, OpenAI integration, break-specific
+animation, celebration, and colour variants remain sequenced for later
+milestones.
 
 ## Planned milestones
 
@@ -38,7 +40,9 @@ Implementation proceeds only after approval for each milestone.
 3. Choose **Load unpacked**.
 4. Select this repository directory.
 
-The current scaffold loads, but its popup and page companion are placeholders.
+Start a focus session from the popup to show Ollie on eligible HTTP and HTTPS
+pages. The service worker owns phase deadlines and transitions focus to break,
+then back to idle.
 
 ## Repository layout
 

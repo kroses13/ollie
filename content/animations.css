@@ -1,1 +1,23 @@
-/* Milestones 2 and 5: companion state animations. */
+.ollie-stage {
+  display: grid;
+  width: 96px;
+  height: 72px;
+  place-items: center;
+  transform-origin: center;
+}
+
+.ollie-stage[data-phase="focus"],
+.ollie-stage[data-phase="break"] {
+  animation: ollie-idle-bob 2.8s steps(2, jump-none) infinite;
+}
+
+@keyframes ollie-idle-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(2px);
+  }
+}

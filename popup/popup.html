@@ -4,12 +4,59 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ollie</title>
+    <link rel="stylesheet" href="../content/overlay.css">
     <link rel="stylesheet" href="popup.css">
   </head>
   <body>
-    <main>
-      <h1>Ollie</h1>
-      <p>The focus controls arrive in Milestone 2.</p>
+    <main class="popup-shell">
+      <header class="popup-header">
+        <div>
+          <p class="eyebrow">Focus companion</p>
+          <h1>Ollie</h1>
+        </div>
+        <div class="companion-mark" id="companion-mark"></div>
+      </header>
+
+      <section class="session-card" id="session-card">
+        <p class="phase-label" id="phase-label">Ready when you are</p>
+        <p class="timer" id="timer">25:00</p>
+        <p class="current-task" id="current-task">Choose one thing to finish.</p>
+      </section>
+
+      <form id="session-form">
+        <label for="task">What are you working on?</label>
+        <textarea
+          id="task"
+          name="task"
+          maxlength="240"
+          placeholder="e.g. Finish the onboarding flow"
+          required
+        ></textarea>
+
+        <div class="duration-grid">
+          <label>
+            Focus
+            <span class="number-field">
+              <input id="focus-minutes" name="focusMinutes" type="number" min="1" max="180" value="25" required>
+              <span>min</span>
+            </span>
+          </label>
+          <label>
+            Break
+            <span class="number-field">
+              <input id="break-minutes" name="breakMinutes" type="number" min="1" max="60" value="5" required>
+              <span>min</span>
+            </span>
+          </label>
+        </div>
+
+        <p class="error-message" id="error-message" hidden></p>
+
+        <div class="actions">
+          <button class="primary-button" id="start-button" type="submit">Start focus</button>
+          <button class="secondary-button" id="stop-button" type="button" hidden>Stop session</button>
+        </div>
+      </form>
     </main>
     <script type="module" src="popup.js"></script>
   </body>
