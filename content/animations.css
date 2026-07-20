@@ -1,14 +1,270 @@
 .ollie-stage {
+  --ollie-x: 0px;
+  --ollie-y: 0px;
+  --ollie-aim-x: -18px;
+  --ollie-aim-y: 8px;
+  --ollie-travel-ms: 0ms;
+
   display: grid;
   width: 96px;
   height: 72px;
   place-items: center;
+  position: relative;
+  transform: translate(var(--ollie-x), var(--ollie-y));
+  transform-origin: center;
+  transition: transform var(--ollie-travel-ms) steps(8, end);
+  z-index: 1;
+}
+
+.ollie-stage[data-depth="behind"] {
+  z-index: -1;
+}
+
+.ollie-character {
+  display: grid;
+  width: 96px;
+  height: 72px;
+  place-items: center;
+  position: relative;
+  transform-origin: center bottom;
+}
+
+.ollie-character .ollie-svg {
+  position: relative;
+  z-index: 1;
+}
+
+.ollie-warning-ink,
+.ollie-spray-pixel {
+  opacity: 0;
+  position: absolute;
+  z-index: 2;
+}
+
+.ollie-warning-ink {
+  display: block;
+  width: 82px;
+  height: 68px;
+  top: 2px;
+  left: -78px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  shape-rendering: crispEdges;
+}
+
+.ollie-spray-pixel {
+  width: 5px;
+  height: 5px;
+  background: var(--ollie-outline, #302831);
+  top: 30px;
+  left: 42px;
+}
+
+.ollie-spray-pixel::after {
+  width: 3px;
+  height: 3px;
+  background: inherit;
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 6px;
+}
+
+.ollie-ink-field {
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  transition: opacity 120ms step-end;
+  z-index: 0;
+}
+
+.ollie-warning-mark {
+  --ink-jitter-x: 0px;
+  --ink-jitter-y: 0px;
+  --ink-flip-x: 1;
+
+  display: block;
+  width: auto;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0;
+  position: absolute;
+  top: 8px;
+  right: -24px;
+  shape-rendering: crispEdges;
+  transform: translate(var(--ink-jitter-x), var(--ink-jitter-y))
+    scaleX(var(--ink-flip-x));
+  transform-origin: center;
+  transition: opacity 1ms step-end;
+}
+
+.ollie-splatter {
+  --ink-jitter-x: 0px;
+  --ink-jitter-y: 0px;
+  --ink-flip-x: 1;
+
+  display: block;
+  height: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0;
+  position: absolute;
+  shape-rendering: crispEdges;
+  transform: translate(var(--ink-jitter-x), var(--ink-jitter-y))
+    scaleX(var(--ink-flip-x));
+  transform-origin: center;
+  transition: opacity 1ms step-end;
+  width: auto;
+}
+
+.ollie-satellite-droplet {
+  background: #4a414d;
+  border: 2px solid #100d11;
+  box-sizing: border-box;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  shape-rendering: crispEdges;
+  transition: opacity 1ms step-end;
+}
+
+.ollie-stage[data-phase="focus"][data-intervention="idle"] .ollie-character,
+.ollie-stage[data-phase="break"] .ollie-character {
+  animation: ollie-idle-bob 2.8s steps(2, jump-none) infinite;
+}
+
+.ollie-stage[data-behavior="notice"] .ollie-character {
+  animation: ollie-notice 240ms steps(2, end) both;
+}
+
+.ollie-stage[data-behavior="warning-wait"] .ollie-character {
+  animation: ollie-warning-wait 2.6s steps(3, jump-none) infinite;
+}
+
+.ollie-stage[data-behavior="think"] .ollie-character {
+  animation: ollie-think 520ms steps(3, jump-none) infinite;
+}
+
+.ollie-stage[data-behavior="think"] #ollie-action-tentacle {
+  animation: ollie-tentacle-think 520ms steps(2, jump-none) infinite;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.ollie-stage[data-behavior="hop"] .ollie-character {
+  animation: ollie-hop var(--ollie-travel-ms) steps(6, jump-none) both;
+}
+
+.ollie-stage[data-behavior="land"] .ollie-character {
+  animation: ollie-land 90ms steps(2, end) both;
+}
+
+.ollie-stage[data-behavior="emerge"] .ollie-character {
+  animation: ollie-emerge 120ms steps(2, end) both;
+}
+
+.ollie-stage[data-behavior="aim"] .ollie-character {
+  animation: ollie-aim 220ms steps(2, end) both;
+}
+
+.ollie-stage[data-behavior="aim"] #ollie-action-tentacle {
+  animation: ollie-tentacle-aim 220ms steps(2, end) both;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.ollie-stage[data-behavior="spray"] .ollie-character {
+  animation: ollie-spray-recoil 150ms steps(2, end) both;
+}
+
+.ollie-stage[data-behavior="spray"] #ollie-action-tentacle {
+  animation: ollie-tentacle-spray 150ms steps(2, end) both;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.ollie-stage[data-confidence="mischievous"][data-behavior="aim"]
+  :is(#ollie-left-ear, #ollie-action-tentacle),
+.ollie-stage[data-confidence="delighted"][data-behavior="aim"]
+  :is(#ollie-left-ear, #ollie-action-tentacle) {
+  animation: ollie-ears-aim 220ms steps(3, end) both;
+  transform-box: fill-box;
   transform-origin: center;
 }
 
-.ollie-stage[data-phase="focus"],
-.ollie-stage[data-phase="break"] {
-  animation: ollie-idle-bob 2.8s steps(2, jump-none) infinite;
+.ollie-stage[data-confidence="mischievous"][data-behavior="spray"]
+  :is(#ollie-left-ear, #ollie-action-tentacle),
+.ollie-stage[data-confidence="delighted"][data-behavior="spray"]
+  :is(#ollie-left-ear, #ollie-action-tentacle) {
+  animation: ollie-ears-spray 150ms steps(2, end) both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.ollie-stage[data-intervention="warning"][data-behavior="spray"]
+  .ollie-warning-ink {
+  animation: ollie-warning-shot 150ms steps(3, end) both;
+}
+
+.ollie-stage[data-intervention^="attack-"][data-behavior="spray"]
+  .ollie-spray-pixel {
+  animation: ollie-spray-pixel 150ms steps(3, end) both;
+}
+
+.ollie-stage[data-behavior="inspect"] .ollie-character {
+  animation: ollie-inspect 420ms steps(3, jump-none) infinite;
+}
+
+.ollie-stage[data-behavior="decide"] .ollie-character {
+  animation: ollie-satisfied 1.8s steps(3, jump-none) infinite;
+}
+
+.ollie-stage[data-confidence="mischievous"][data-behavior="inspect"]
+  .ollie-character {
+  animation-duration: 320ms;
+}
+
+.ollie-stage[data-confidence="delighted"][data-behavior="inspect"]
+  .ollie-character {
+  animation-duration: 240ms;
+}
+
+.ollie-ink-field[data-intervention="warning"],
+.ollie-ink-field[data-intervention^="attack-"] {
+  opacity: 1;
+}
+
+.ollie-ink-field[data-intervention="warning"][data-behavior="spray"]
+  .ollie-warning-mark,
+.ollie-ink-field[data-intervention="warning"][data-behavior="inspect"]
+  .ollie-warning-mark,
+.ollie-ink-field[data-intervention="warning"][data-behavior="warning-wait"]
+  .ollie-warning-mark,
+.ollie-ink-field[data-intervention^="attack-"] .ollie-warning-mark {
+  opacity: 1;
+}
+
+.ollie-ink-field[data-visible-count="1"] [data-spray-event="1"],
+.ollie-ink-field[data-visible-count="2"] [data-spray-event="1"],
+.ollie-ink-field[data-visible-count="2"] [data-spray-event="2"],
+.ollie-ink-field[data-visible-count="3"] [data-spray-event="1"],
+.ollie-ink-field[data-visible-count="3"] [data-spray-event="2"],
+.ollie-ink-field[data-visible-count="3"] [data-spray-event="3"],
+.ollie-ink-field[data-visible-count="4"] [data-spray-event="1"],
+.ollie-ink-field[data-visible-count="4"] [data-spray-event="2"],
+.ollie-ink-field[data-visible-count="4"] [data-spray-event="3"],
+.ollie-ink-field[data-visible-count="4"] [data-spray-event="4"],
+.ollie-ink-field[data-visible-count="5"] [data-spray-event]:not([data-spray-event="6"]):not([data-spray-event="7"]):not([data-spray-event="8"]),
+.ollie-ink-field[data-visible-count="6"] [data-spray-event]:not([data-spray-event="7"]):not([data-spray-event="8"]),
+.ollie-ink-field[data-visible-count="7"] [data-spray-event]:not([data-spray-event="8"]),
+.ollie-ink-field[data-visible-count="8"] [data-spray-event] {
+  opacity: 1;
 }
 
 @keyframes ollie-idle-bob {
@@ -19,5 +275,220 @@
 
   50% {
     transform: translateY(2px);
+  }
+}
+
+@keyframes ollie-notice {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-3px, -2px);
+  }
+}
+
+@keyframes ollie-warning-wait {
+  0%,
+  55%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  70% {
+    transform: translate(-2px, 1px);
+  }
+}
+
+@keyframes ollie-think {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(0, -2px);
+  }
+}
+
+@keyframes ollie-hop {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  35%,
+  60% {
+    transform: translateY(-13px);
+  }
+}
+
+@keyframes ollie-tentacle-think {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(-1px);
+  }
+}
+
+@keyframes ollie-land {
+  0% {
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(3px);
+  }
+}
+
+@keyframes ollie-emerge {
+  0% {
+    transform: translateY(6px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes ollie-aim {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(3px, -2px);
+  }
+}
+
+@keyframes ollie-tentacle-aim {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-1px, -1px);
+  }
+}
+
+@keyframes ollie-spray-recoil {
+  0% {
+    transform: translate(-2px, 0);
+  }
+
+  100% {
+    transform: translate(4px, 1px);
+  }
+}
+
+@keyframes ollie-tentacle-spray {
+  0% {
+    transform: translateX(-2px);
+  }
+
+  100% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes ollie-ears-aim {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes ollie-ears-spray {
+  0% {
+    transform: translateY(-1px);
+  }
+
+  100% {
+    transform: translateY(1px);
+  }
+}
+
+@keyframes ollie-warning-shot {
+  0% {
+    opacity: 0.8;
+    transform: translate(0, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-8px, 7px);
+  }
+}
+
+@keyframes ollie-spray-pixel {
+  0% {
+    opacity: 0.9;
+    transform: translate(0, 0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--ollie-aim-x), var(--ollie-aim-y));
+  }
+}
+
+@keyframes ollie-inspect {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(-3px, 1px);
+  }
+}
+
+@keyframes ollie-satisfied {
+  0%,
+  55%,
+  100% {
+    transform: translateY(0);
+  }
+
+  70% {
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ollie-stage {
+    transition: none;
+  }
+
+  .ollie-stage,
+  .ollie-character,
+  .ollie-stage .ollie-warning-ink,
+  .ollie-stage .ollie-spray-pixel,
+  .ollie-stage #ollie-left-ear,
+  .ollie-stage #ollie-action-tentacle,
+  .ollie-warning-mark,
+  .ollie-splatter,
+  .ollie-satellite-droplet {
+    animation: none !important;
+  }
+
+  .ollie-stage[data-intervention="warning"][data-behavior="spray"]
+    .ollie-warning-ink,
+  .ollie-stage[data-intervention^="attack-"][data-behavior="spray"]
+    .ollie-spray-pixel {
+    opacity: 0.75;
+  }
+
+  .ollie-ink-field,
+  .ollie-splatter,
+  .ollie-satellite-droplet {
+    transition-timing-function: step-end;
   }
 }

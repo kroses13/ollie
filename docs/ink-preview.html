@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ollie canonical ink review</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f4eee8;
+        --panel: #fffaf5;
+        --line: #302831;
+        --muted: #746a70;
+        --accent: #ed8588;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--line);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      header,
+      main,
+      footer {
+        width: min(1600px, calc(100% - 40px));
+        margin-inline: auto;
+      }
+
+      header { padding: 42px 0 26px; }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(32px, 5vw, 58px);
+        line-height: 0.98;
+        letter-spacing: -0.045em;
+      }
+
+      header p {
+        max-width: 780px;
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .status {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 7px 10px;
+        border: 2px solid var(--line);
+        background: #ffe0dc;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      main { display: grid; gap: 24px; }
+
+      .asset-row {
+        overflow-x: auto;
+        border: 2px solid var(--line);
+        background: var(--panel);
+        box-shadow: 7px 7px 0 var(--line);
+      }
+
+      .asset-heading {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        min-width: 1350px;
+        padding: 13px 16px;
+        border-bottom: 2px solid var(--line);
+        background: var(--panel);
+      }
+
+      .asset-heading h2 { margin: 0; font-size: 22px; }
+
+      .dimensions {
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 11px;
+      }
+
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: 190px 230px 330px 600px;
+        min-width: 1350px;
+      }
+
+      .comparison {
+        min-width: 0;
+        padding: 14px;
+      }
+
+      .comparison + .comparison { border-left: 1px solid #d9cfc9; }
+
+      .label {
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .stage {
+        display: grid;
+        min-height: 148px;
+        place-items: center;
+        overflow: auto;
+        border: 1px solid #c9bdb7;
+        background-color: #e6dfda;
+        background-image:
+          linear-gradient(45deg, #ddd4ce 25%, transparent 25%),
+          linear-gradient(-45deg, #ddd4ce 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #ddd4ce 75%),
+          linear-gradient(-45deg, transparent 75%, #ddd4ce 75%);
+        background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+        background-size: 12px 12px;
+      }
+
+      .stage--zoom-4 { min-height: 280px; }
+      .stage--zoom-8 { min-height: 520px; }
+
+      .reference-crop {
+        position: relative;
+        flex: none;
+        overflow: hidden;
+      }
+
+      .reference-crop img {
+        position: absolute;
+        width: 512px;
+        height: 512px;
+        max-width: none;
+      }
+
+      .ink-asset {
+        display: block;
+        flex: none;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+      }
+
+      footer {
+        padding: 28px 0 46px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 720px) {
+        header,
+        main,
+        footer { width: min(100% - 28px, 1600px); }
+        header { padding-top: 30px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Canonical ink reproduction</h1>
+      <p>
+        The three approved reference splatters are shown beside their SVG
+        reproductions at matching display scale, 4×, and 8×. The approved SVGs
+        are now the production library used by the intervention.
+      </p>
+      <span class="status">Approved · production library</span>
+    </header>
+
+    <main id="asset-grid"></main>
+
+    <footer>
+      The SVGs contain only grid-aligned <code>&lt;rect&gt;</code> cells and the
+      approved outline, base, and shade colours. No reference raster is embedded
+      in the extension artwork.
+    </footer>
+
+    <script>
+      const referenceImage = "reference/ink-splatter-approved.png";
+      const assets = [
+        {
+          id: "approved-small",
+          label: "Small",
+          width: 41,
+          height: 34,
+          crop: { x: 96, y: 452, width: 164, height: 136 },
+        },
+        {
+          id: "approved-medium",
+          label: "Medium",
+          width: 69,
+          height: 49,
+          crop: { x: 323, y: 403, width: 276, height: 196 },
+        },
+        {
+          id: "approved-large",
+          label: "Large",
+          width: 73,
+          height: 62,
+          crop: { x: 645, y: 368, width: 292, height: 248 },
+        },
+      ];
+
+      const assetGrid = document.querySelector("#asset-grid");
+
+      assets.forEach((asset) => {
+        const row = document.createElement("article");
+        row.className = "asset-row";
+        row.innerHTML = `
+          <div class="asset-heading">
+            <h2>${asset.label}</h2>
+            <span class="dimensions">${asset.id} · ${asset.width}×${asset.height} grid</span>
+          </div>
+          <div class="comparison-grid">
+            ${referenceComparison(asset)}
+            ${svgComparison(asset, "Reproduced SVG", 2, "reference-scale")}
+            ${svgComparison(asset, "4× zoom", 4, "zoom-4")}
+            ${svgComparison(asset, "8× zoom", 8, "zoom-8")}
+          </div>
+        `;
+        assetGrid.append(row);
+      });
+
+      function referenceComparison(asset) {
+        const scale = 0.5;
+        return `
+          <section class="comparison">
+            <div class="label">Approved reference</div>
+            <div class="stage">
+              <div
+                class="reference-crop"
+                style="width:${asset.crop.width * scale}px;height:${asset.crop.height * scale}px"
+              >
+                <img
+                  src="${referenceImage}"
+                  alt="Approved ${asset.label.toLowerCase()} ink splatter reference"
+                  style="left:${-asset.crop.x * scale}px;top:${-asset.crop.y * scale}px"
+                >
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      function svgComparison(asset, label, scale, stageClass) {
+        return `
+          <section class="comparison">
+            <div class="label">${label}</div>
+            <div class="stage stage--${stageClass}">
+              <img
+                class="ink-asset"
+                src="../assets/ink/canonical/${asset.id}.svg"
+                width="${asset.width * scale}"
+                height="${asset.height * scale}"
+                alt="${asset.label} reproduced ink splatter at ${scale} times grid scale"
+              >
+            </div>
+          </section>
+        `;
+      }
+    </script>
+  </body>
+</html>

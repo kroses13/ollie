@@ -68,7 +68,39 @@ export function normalizeSession(value) {
   };
 }
 
-export function createPublicState(settings, session, now = Date.now()) {
+export function createPublicState(
+  settings,
+  session,
+  runtimeContext = {
+    focusedWindowId: null,
+    activeTabId: null,
+    activeHostname: "",
+    isDistracting: false,
+    distractionService: null,
+  },
+  viewerTabId = null,
+  now = Date.now(),
+) {
+  const isViewerActiveTab = Number.isInteger(viewerTabId)
+    ? viewerTabId === runtimeContext.activeTabId
+    : Boolean(runtimeContext.activeTabId);
+  const isDistracted =
+    session.phase === SESSION_PHASE.FOCUS &&
+    runtimeContext.isDistracting &&
+    isViewerActiveTab;
+  const isContentScriptView = Number.isInteger(viewerTabId);
+  const publicRuntimeContext = isContentScriptView
+    ? {
+        focusedWindowId: null,
+        activeTabId: null,
+        activeHostname: "",
+        isDistracting: isDistracted,
+        distractionService: isDistracted
+          ? runtimeContext.distractionService
+          : null,
+      }
+    : { ...runtimeContext };
+
   return {
     stateVersion: STATE_VERSION,
     settings: {
@@ -77,6 +109,14 @@ export function createPublicState(settings, session, now = Date.now()) {
       colour: settings.colour,
     },
     session: { ...session },
+    runtime: publicRuntimeContext,
+    companion: {
+      isActiveTab: isViewerActiveTab,
+      isDistracted,
+      distractionService: isDistracted
+        ? runtimeContext.distractionService
+        : null,
+    },
     remainingMs: session.phaseEndsAt
       ? Math.max(0, session.phaseEndsAt - now)
       : 0,

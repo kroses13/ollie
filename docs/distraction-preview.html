@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ollie distraction intervention preview</title>
+    <link rel="stylesheet" href="../content/overlay.css">
+    <link rel="stylesheet" href="../content/animations.css">
+    <link rel="stylesheet" href="distraction-preview.css">
+  </head>
+  <body>
+    <header class="browser-frame">
+      <div class="browser-dots"><span></span><span></span><span></span></div>
+      <div class="address-bar">distracting.example / endless-feed</div>
+    </header>
+
+    <main class="mock-page">
+      <header class="mock-page__header">
+        <p class="eyebrow">Simulated distracting webpage</p>
+        <h1>A page designed to pull your attention away</h1>
+        <p>
+          This mock content makes it easier to judge coverage, legibility, and
+          whether the intervention still leaves the page escapable.
+        </p>
+      </header>
+
+      <section class="feed" aria-label="Simulated page content">
+        <article class="feed-card feed-card--wide">
+          <div class="feed-card__image"></div>
+          <div>
+            <span class="label">Recommended</span>
+            <h2>One more thing before you get back to work</h2>
+            <p>Sample content remains beneath Ollie's bounded ink layer.</p>
+          </div>
+        </article>
+        <article class="feed-card">
+          <div class="feed-card__image feed-card__image--coral"></div>
+          <h2>Trending now</h2>
+          <p>A second card provides another visual reference point.</p>
+        </article>
+        <article class="feed-card">
+          <div class="feed-card__image feed-card__image--gold"></div>
+          <h2>Keep scrolling</h2>
+          <p>The viewport stays interactive even in the final phase.</p>
+        </article>
+      </section>
+    </main>
+
+    <aside class="preview-controls">
+      <div class="preview-controls__summary">
+        <div>
+          <p class="preview-controls__eyebrow">Current state</p>
+          <strong id="state-title">Idle</strong>
+        </div>
+        <div class="preview-controls__actions">
+          <span class="state-badge" id="coverage-label">0% ink</span>
+          <button class="panel-toggle" id="toggle-panel" type="button">Hide controls</button>
+        </div>
+      </div>
+      <p class="state-description" id="state-description">
+        Ollie rests at the page edge with no intervention active.
+      </p>
+      <div class="behavior-readout">
+        <span>Ollie's intent</span>
+        <strong id="behavior-label">Resting</strong>
+      </div>
+      <div class="state-buttons" id="state-buttons">
+        <button type="button" data-state="idle">Idle</button>
+        <button type="button" data-state="warning">Warning</button>
+        <button type="button" data-state="attack-one">Phase 1</button>
+        <button type="button" data-state="attack-two">Phase 2</button>
+        <button type="button" data-state="attack-final">Final</button>
+      </div>
+      <button class="sequence-button" id="play-sequence" type="button">
+        Play real escalation · 14s
+      </button>
+      <button class="comparison-button" id="open-ink-comparison" type="button">
+        Compare reference and generated ink
+      </button>
+      <p class="sequence-status" id="sequence-status">Direct state controls are ready.</p>
+    </aside>
+
+    <section class="ink-comparison-panel" id="ink-comparison-panel" hidden>
+      <header class="ink-comparison-panel__header">
+        <div>
+          <p class="preview-controls__eyebrow">Visual verification</p>
+          <h2>Approved reference vs generated phase output</h2>
+        </div>
+        <button id="close-ink-comparison" type="button">Close comparison</button>
+      </header>
+      <p class="ink-comparison-panel__intro">
+        Generated samples use the same fixed production assets and event groups
+        as the live intervention. Each row shows only the units introduced in
+        that phase.
+      </p>
+      <div class="ink-comparison-rows">
+        <article class="ink-comparison-row">
+          <h3>Phase 1 · canonical Small</h3>
+          <div class="ink-comparison-pair">
+            <figure>
+              <figcaption>Approved reference</figcaption>
+              <img src="reference/ink-splatter-approved.png" alt="">
+            </figure>
+            <figure>
+              <figcaption>Eight Small units · sprays 1–2</figcaption>
+              <div class="ink-comparison-output" data-comparison-phase="attack-one"></div>
+            </figure>
+          </div>
+        </article>
+        <article class="ink-comparison-row">
+          <h3>Phase 2 · Medium → Large</h3>
+          <div class="ink-comparison-pair">
+            <figure>
+              <figcaption>Approved reference</figcaption>
+              <img src="reference/ink-splatter-approved.png" alt="">
+            </figure>
+            <figure>
+              <figcaption>Six spread units · sprays 3–5</figcaption>
+              <div class="ink-comparison-output" data-comparison-phase="attack-two"></div>
+            </figure>
+          </div>
+        </article>
+        <article class="ink-comparison-row">
+          <h3>Final phase · scaled Large</h3>
+          <div class="ink-comparison-pair">
+            <figure>
+              <figcaption>Approved reference</figcaption>
+              <img src="reference/ink-splatter-approved.png" alt="">
+            </figure>
+            <figure>
+              <figcaption>Six upper-range units · sprays 6–8</figcaption>
+              <div class="ink-comparison-output" data-comparison-phase="attack-final"></div>
+            </figure>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <script type="module" src="distraction-preview.js"></script>
+  </body>
+</html>

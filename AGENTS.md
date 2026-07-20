@@ -35,7 +35,8 @@ the user requests it.
 - No automated test suite or Node test runner
 - No remotely hosted executable code
 - No runtime dependencies unless explicitly approved
-- Inline pixel-grid SVG made from `<rect>` cells
+- Inline pixel-grid SVG made from `<rect>` cells for Ollie; curated local SVG
+  assets made from grid-aligned `<rect>` geometry for ink
 - CSS and DOM/SVG transforms for animation
 - No raster companion sprites or generated animation frames
 
@@ -209,6 +210,20 @@ Ollie must remain a pixel-grid SVG:
 
 Use one fixed overlay root with a bounded high `z-index`. Passive companion
 elements should default to `pointer-events: none`.
+
+The approved production ink library is the canonical Small, Medium, and Large
+set under `assets/ink/canonical/`. Their occupied cells, silhouettes, shade
+placement, protrusions, satellites, and proportions are locked and must not be
+altered. Preserve coverage by changing rendered scale only. Keep the exact
+three-role palette: `#100d11` outline, `#4a414d` base, and `#29222c` shade.
+Runtime placement may vary position, horizontal mirroring, and bounded
+satellite-droplet offsets without modifying the canonical SVG files. Spread
+same-event units independently; do not repel or prevent overlap between
+different spray events.
+
+The warning spray leaves a stationary Small mark in the viewport. That mark
+must persist through all later attack phases and clear only when the
+intervention returns to idle.
 
 Support these visual modes:
 

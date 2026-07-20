@@ -35,9 +35,13 @@
     {
       "resources": [
         "content/companion-view.js",
+        "content/ink-splatter-view.js",
+        "content/intervention-controller.js",
+        "content/ollie-choreography.js",
         "content/ollie-grid.js",
         "content/overlay.css",
-        "content/animations.css"
+        "content/animations.css",
+        "assets/ink/canonical/*.svg"
       ],
       "matches": [
         "http://*/*",

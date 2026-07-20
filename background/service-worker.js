@@ -18,10 +18,18 @@ import {
   reconcileSession,
   startFocusSession,
 } from "./session-controller.js";
+import {
+  resolveActivatedTabContext,
+  resolveFocusedTabContext,
+  resolveUpdatedTabContext,
+  resolveWindowFocusContext,
+} from "./tab-monitor.js";
 
 let settings;
 let session;
+let tabContext;
 let initialization = initialize();
+let tabContextUpdateQueue = Promise.resolve();
 
 chrome.runtime.onInstalled.addListener(() => {
   initialization = initialize();
@@ -39,6 +47,26 @@ chrome.alarms.onAlarm.addListener((alarm) => {
   void handlePhaseAlarm();
 });
 
+chrome.tabs.onActivated.addListener((activeInfo) => {
+  enqueueTabContextUpdate((currentContext) =>
+    resolveActivatedTabContext(activeInfo, currentContext),
+  );
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (!("url" in changeInfo)) {
+    return;
+  }
+
+  enqueueTabContextUpdate((currentContext) =>
+    resolveUpdatedTabContext(tabId, changeInfo, tab, currentContext),
+  );
+});
+
+chrome.windows.onFocusChanged.addListener((windowId) => {
+  enqueueTabContextUpdate(() => resolveWindowFocusContext(windowId));
+});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (!isTrustedSender(sender)) {
     sendResponse(errorResponse("Untrusted message sender."));
@@ -52,9 +80,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 async function initialize() {
-  const stored = await loadAppData();
+  const [stored, initialTabContext] = await Promise.all([
+    loadAppData(),
+    resolveFocusedTabContext(),
+  ]);
   settings = stored.settings;
   session = reconcileSession(stored.session);
+  tabContext = initialTabContext;
   await saveAppData(settings, session);
   await scheduleCurrentPhase();
 }
@@ -68,7 +100,7 @@ async function handleMessage(message, sender) {
 
   switch (message?.type) {
     case MESSAGE_TYPE.GET_STATE:
-      return successResponse(getPublicState());
+      return successResponse(getPublicState(sender.tab?.id ?? null));
 
     case MESSAGE_TYPE.START_SESSION:
       if (!isPopupSender(sender)) {
@@ -138,8 +170,8 @@ async function scheduleCurrentPhase() {
   }
 }
 
-function getPublicState() {
-  return createPublicState(settings, session);
+function getPublicState(viewerTabId = null) {
+  return createPublicState(settings, session, tabContext, viewerTabId);
 }
 
 async function broadcastState() {
@@ -151,10 +183,40 @@ async function broadcastState() {
   const tabs = await chrome.tabs.query({});
   const deliveries = tabs
     .filter((tab) => tab.id && /^https?:/.test(tab.url ?? ""))
-    .map((tab) => chrome.tabs.sendMessage(tab.id, message));
+    .map((tab) =>
+      chrome.tabs.sendMessage(tab.id, {
+        ...message,
+        payload: getPublicState(tab.id),
+      }),
+    );
 
   deliveries.push(chrome.runtime.sendMessage(message));
   await Promise.allSettled(deliveries);
+}
+
+function enqueueTabContextUpdate(updateContext) {
+  tabContextUpdateQueue = tabContextUpdateQueue
+    .then(async () => {
+      await ensureInitialized();
+      const nextContext = await updateContext(tabContext);
+      if (tabContextsMatch(tabContext, nextContext)) {
+        return;
+      }
+
+      tabContext = nextContext;
+      await broadcastState();
+    })
+    .catch(() => undefined);
+}
+
+function tabContextsMatch(left, right) {
+  return (
+    left.focusedWindowId === right.focusedWindowId &&
+    left.activeTabId === right.activeTabId &&
+    left.activeHostname === right.activeHostname &&
+    left.isDistracting === right.isDistracting &&
+    left.distractionService === right.distractionService
+  );
 }
 
 function isTrustedSender(sender) {

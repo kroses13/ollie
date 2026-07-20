@@ -85,7 +85,10 @@ function render() {
   const isActive = session.phase === "focus" || session.phase === "break";
 
   elements.sessionCard.dataset.phase = session.phase;
-  elements.phaseLabel.textContent = getPhaseLabel(session.phase);
+  elements.phaseLabel.textContent = getPhaseLabel(
+    session.phase,
+    appState.companion,
+  );
   elements.currentTask.textContent = isActive
     ? session.task
     : "Choose one thing to finish.";
@@ -118,7 +121,12 @@ function formatDuration(milliseconds) {
   return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-function getPhaseLabel(phase) {
+function getPhaseLabel(phase, companion) {
+  if (phase === "focus" && companion?.isDistracted) {
+    return companion.distractionService
+      ? `${companion.distractionService} distraction detected`
+      : "Distraction detected";
+  }
   if (phase === "focus") {
     return "Focus time";
   }
