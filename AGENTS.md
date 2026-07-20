@@ -309,6 +309,10 @@ and verified.
 - Do not commit or push unless explicitly requested.
 - Do not add generated build output; the MVP has no build step.
 
+After each meaningful milestone, update `docs/submission-notes.md` with the work
+completed, Codex’s contribution, the human decision or review, and the files
+affected. Keep entries factual and concise.
+
 ## Decision rule
 
 When requirements are ambiguous, favor:

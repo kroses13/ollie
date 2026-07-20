@@ -64,4 +64,15 @@ python3 -m http.server 4173 --bind 127.0.0.1
 
 Then visit `http://127.0.0.1:4173/docs/ollie-preview.html`.
 
+## Roadmap
+
+V1.0 uses BYOK (user-supplied OpenAI API key, stored locally, never sent
+server-side). A production release would move this behind a proxy so users don't
+need their own API key — noted here as a known next step, not a limitation we're
+unaware of.
+
+## Documentation
+
+- [Submission and build notes](docs/submission-notes.md)
+
 See `AGENTS.md` for implementation rules and milestone boundaries.
