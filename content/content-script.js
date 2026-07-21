@@ -8,6 +8,8 @@
 
   let companionElements = null;
   let interventionController = null;
+  let latestState = null;
+  let commentaryIntervalId = null;
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message?.type === STATE_UPDATED) {
@@ -56,13 +58,15 @@
       stage.dataset.depth = "front";
 
       const inkField = createPixelInkField();
-      stage.append(createOllieCharacter({ title: "Ollie" }));
+      const character = createOllieCharacter({ title: "Ollie" });
+      stage.append(character);
       shadowRoot.append(styles, inkField, stage);
       document.documentElement.append(host);
 
       companionElements = {
         host,
         inkField,
+        commentary: character.querySelector(".ollie-commentary"),
         randomizePixelInkField,
         stage,
       };
@@ -77,11 +81,13 @@
       window.addEventListener(
         "pagehide",
         () => {
+          clearInterval(commentaryIntervalId);
           interventionController?.dispose();
           companionElements?.choreography?.dispose();
         },
         { once: true },
       );
+      commentaryIntervalId = window.setInterval(renderCommentary, 1_000);
       requestState();
     } catch {
       // Restricted or unloading pages may reject extension resource requests.
@@ -110,6 +116,7 @@
       return;
     }
 
+    latestState = state;
     const phase = state.session.phase;
     const isSessionActive = phase === "focus" || phase === "break";
     companionElements.host.style.setProperty(
@@ -121,6 +128,51 @@
     interventionController?.setDistracted(
       Boolean(state.companion?.isDistracted),
     );
+    renderCommentary();
+  }
+
+  function renderCommentary() {
+    if (!companionElements?.commentary || !latestState?.session) {
+      return;
+    }
+
+    const line = selectCommentaryLine(latestState, Date.now());
+    companionElements.commentary.textContent = line;
+    companionElements.commentary.hidden = !line;
+    companionElements.commentary.dataset.source =
+      latestState.session.commentarySource ?? "fallback";
+  }
+
+  function selectCommentaryLine(state, now) {
+    const { session } = state;
+    const commentary = session.commentary;
+    if (!commentary || session.phase === "idle") {
+      return "";
+    }
+
+    if (
+      session.phase === "focus" &&
+      Number.isFinite(session.startedAt) &&
+      now - session.startedAt < 8_000
+    ) {
+      return commentary.greeting;
+    }
+
+    const lines =
+      session.phase === "break"
+        ? commentary.break
+        : state.companion?.isDistracted
+          ? commentary.distracted
+          : commentary.idle;
+    if (!Array.isArray(lines) || lines.length !== 2) {
+      return "";
+    }
+
+    const phaseStartedAt = Number.isFinite(session.phaseStartedAt)
+      ? session.phaseStartedAt
+      : now;
+    const index = Math.floor((now - phaseStartedAt) / 9_000) % lines.length;
+    return lines[index];
   }
 
   function applyInterventionStage(interventionStage) {

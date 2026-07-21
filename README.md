@@ -7,7 +7,8 @@ breaks.
 
 ## Status
 
-Milestone 3 is implemented and awaiting unpacked-Chrome review: the Core Shell,
+Milestone 4 is implemented and approved after live unpacked-Chrome verification
+with a user-supplied key and task-specific generated commentary. The Core Shell,
 normalized distraction-domain matching, focused-window and active-tab tracking,
 tab-specific state broadcasts, and Ollie's two-stage warning and gradually
 accumulating pixel-ink intervention are present. During attack phases Ollie now
@@ -18,8 +19,14 @@ canonical Small, Medium, and Large SVG splatters, scaled without changing their
 artwork. Each attack receives a fresh seeded layout with varied position,
 horizontal mirroring, and satellite-droplet offsets. Units are approximately
 20% smaller, while the Final phase adds more units for a clearer escalation.
-OpenAI integration, break-specific animation, celebration, and colour variants
-remain sequenced for later milestones.
+
+Task-aware commentary now uses a single session-start request to
+`gpt-5.6-luna` when both an optional task and a locally stored BYOK key are
+present. The worker validates and caches the strict structured response for the
+whole session. A blank task, missing key, timeout, HTTP error, offline state, or
+malformed response all use the same bundled Ollie lines without preventing the
+timer from starting. Break-specific animation, celebration, and colour variants
+remain sequenced for Milestone 5.
 
 ## Planned milestones
 
@@ -30,6 +37,8 @@ remain sequenced for later milestones.
 5. Break/celebrate states, colour variants, and polish
 
 Implementation proceeds only after approval for each milestone.
+
+Milestones 1–4 are implemented and approved. Milestone 5 has not started.
 
 ## Technical constraints
 
@@ -51,6 +60,11 @@ Implementation proceeds only after approval for each milestone.
 Start a focus session from the popup to show Ollie on eligible HTTP and HTTPS
 pages. The service worker owns phase deadlines and transitions focus to break,
 then back to idle.
+
+The task field is optional. To enable task-aware commentary, paste an OpenAI API
+key into the popup and choose **Save key**. The popup never reads a saved key
+back from storage; it receives only a `hasApiKey` status flag. Starting with a
+blank task deliberately skips the API request and uses bundled commentary.
 
 ## Repository layout
 
@@ -85,6 +99,11 @@ V1.0 uses BYOK (user-supplied OpenAI API key, stored locally, never sent
 server-side). A production release would move this behind a proxy so users don't
 need their own API key — noted here as a known next step, not a limitation we're
 unaware of.
+
+For V1.0, only the background service worker reads the saved key and calls the
+OpenAI Responses API. The key and authorization header are never included in
+content-script state or logs. BYOK in `chrome.storage.local` is an MVP tradeoff,
+not secure secret storage.
 
 Next interaction milestone: make Ollie draggable and persist his position so
 the default top-right placement cannot obstruct webpage controls. This is a

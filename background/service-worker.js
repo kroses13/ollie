@@ -3,17 +3,23 @@ import {
   SESSION_PHASE,
 } from "../shared/constants.js";
 import {
+  COMMENTARY_SOURCE,
+  createFallbackCommentary,
+} from "../shared/commentary.js";
+import {
   errorResponse,
   MESSAGE_TYPE,
   successResponse,
 } from "../shared/messages.js";
-import { createPublicState } from "../shared/state.js";
+import { createIdleSession, createPublicState } from "../shared/state.js";
 import {
+  loadApiKey,
   loadAppData,
   saveAppData,
   saveSession,
 } from "../shared/storage.js";
 import { validateStartSessionPayload } from "../shared/validation.js";
+import { generateCommentary } from "./openai-client.js";
 import {
   reconcileSession,
   startFocusSession,
@@ -28,6 +34,7 @@ import {
 let settings;
 let session;
 let tabContext;
+let hasApiKey = false;
 let initialization = initialize();
 let tabContextUpdateQueue = Promise.resolve();
 
@@ -80,13 +87,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 async function initialize() {
-  const [stored, initialTabContext] = await Promise.all([
+  await chrome.storage.local.setAccessLevel({
+    accessLevel: "TRUSTED_CONTEXTS",
+  });
+  const [stored, initialTabContext, apiKey] = await Promise.all([
     loadAppData(),
     resolveFocusedTabContext(),
+    loadApiKey(),
   ]);
   settings = stored.settings;
   session = reconcileSession(stored.session);
   tabContext = initialTabContext;
+  hasApiKey = Boolean(apiKey);
   await saveAppData(settings, session);
   await scheduleCurrentPhase();
 }
@@ -114,6 +126,12 @@ async function handleMessage(message, sender) {
       }
       return stopSession();
 
+    case MESSAGE_TYPE.API_KEY_CHANGED:
+      if (!isPopupSender(sender)) {
+        return errorResponse("Only the Ollie popup can update API key status.");
+      }
+      return refreshApiKeyStatus();
+
     default:
       return errorResponse("Unknown Ollie command.");
   }
@@ -130,27 +148,71 @@ async function startSession(payload) {
     focusMinutes: validated.value.focusMinutes,
     breakMinutes: validated.value.breakMinutes,
   };
-  session = startFocusSession(validated.value);
+  const shouldGenerate = Boolean(validated.value.task);
+  session = startFocusSession({
+    ...validated.value,
+    commentary: createFallbackCommentary(),
+    commentarySource: shouldGenerate
+      ? COMMENTARY_SOURCE.PENDING
+      : COMMENTARY_SOURCE.FALLBACK,
+  });
+  const sessionStartedAt = session.startedAt;
 
   await saveAppData(settings, session);
   await scheduleCurrentPhase();
   await broadcastState();
+
+  if (shouldGenerate) {
+    await populateSessionCommentary(sessionStartedAt, validated.value.task);
+  }
+
   return successResponse(getPublicState());
 }
 
 async function stopSession() {
   session = {
-    phase: SESSION_PHASE.IDLE,
-    task: "",
-    startedAt: null,
-    phaseStartedAt: null,
-    phaseEndsAt: null,
+    ...createIdleSession(),
     focusMinutes: settings.focusMinutes,
     breakMinutes: settings.breakMinutes,
   };
 
   await saveSession(session);
   await chrome.alarms.clear(PHASE_ALARM_NAME);
+  await broadcastState();
+  return successResponse(getPublicState());
+}
+
+async function populateSessionCommentary(sessionStartedAt, task) {
+  let commentary = createFallbackCommentary();
+  let commentarySource = COMMENTARY_SOURCE.FALLBACK;
+
+  try {
+    const apiKey = await loadApiKey();
+    if (!apiKey) {
+      throw new Error("No OpenAI API key is stored.");
+    }
+
+    commentary = await generateCommentary({ apiKey, task });
+    commentarySource = COMMENTARY_SOURCE.GENERATED;
+  } catch {
+    // Blank tasks and every request failure intentionally share bundled lines.
+  }
+
+  if (session.startedAt !== sessionStartedAt) {
+    return;
+  }
+
+  session = {
+    ...session,
+    commentary,
+    commentarySource,
+  };
+  await saveSession(session);
+  await broadcastState();
+}
+
+async function refreshApiKeyStatus() {
+  hasApiKey = Boolean(await loadApiKey());
   await broadcastState();
   return successResponse(getPublicState());
 }
@@ -171,7 +233,12 @@ async function scheduleCurrentPhase() {
 }
 
 function getPublicState(viewerTabId = null) {
-  return createPublicState(settings, session, tabContext, viewerTabId);
+  return createPublicState(
+    { ...settings, hasApiKey },
+    session,
+    tabContext,
+    viewerTabId,
+  );
 }
 
 async function broadcastState() {

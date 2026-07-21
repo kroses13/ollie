@@ -98,6 +98,10 @@ export function createOllieCharacter({ title = DEFAULT_TITLE } = {}) {
   const sprayPixel = document.createElement("div");
   sprayPixel.className = "ollie-spray-pixel";
 
-  character.append(svg, warningInk, sprayPixel);
+  const commentary = document.createElement("p");
+  commentary.className = "ollie-commentary";
+  commentary.hidden = true;
+
+  character.append(svg, warningInk, sprayPixel, commentary);
   return character;
 }

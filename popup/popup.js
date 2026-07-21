@@ -1,5 +1,7 @@
 import { createOllieSvg } from "../content/companion-view.js";
+import { STORAGE_KEYS } from "../shared/constants.js";
 import { MESSAGE_TYPE } from "../shared/messages.js";
+import { validateApiKeyPayload } from "../shared/validation.js";
 
 const elements = {
   companionMark: document.querySelector("#companion-mark"),
@@ -7,8 +9,14 @@ const elements = {
   error: document.querySelector("#error-message"),
   focusMinutes: document.querySelector("#focus-minutes"),
   breakMinutes: document.querySelector("#break-minutes"),
+  apiKey: document.querySelector("#api-key"),
+  apiKeyForm: document.querySelector("#api-key-form"),
+  apiKeyStatus: document.querySelector("#api-key-status"),
+  commentaryStatus: document.querySelector("#commentary-status"),
   form: document.querySelector("#session-form"),
   phaseLabel: document.querySelector("#phase-label"),
+  removeApiKey: document.querySelector("#remove-api-key"),
+  saveApiKey: document.querySelector("#save-api-key"),
   sessionCard: document.querySelector("#session-card"),
   startButton: document.querySelector("#start-button"),
   stopButton: document.querySelector("#stop-button"),
@@ -42,6 +50,50 @@ elements.stopButton.addEventListener("click", () => {
   clearError();
   setPending(true);
   sendCommand({ type: MESSAGE_TYPE.STOP_SESSION }).finally(() => setPending(false));
+});
+
+elements.apiKeyForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  clearError();
+  setPending(true);
+
+  const validated = validateApiKeyPayload({ apiKey: elements.apiKey.value });
+  if (!validated.ok) {
+    showError(validated.error);
+    setPending(false);
+    return;
+  }
+
+  try {
+    await chrome.storage.local.set({
+      [STORAGE_KEYS.OPENAI_API_KEY]: validated.value.apiKey,
+    });
+    const state = await sendCommand({ type: MESSAGE_TYPE.API_KEY_CHANGED });
+    if (state) {
+      elements.apiKey.value = "";
+    }
+  } catch {
+    showError("Ollie could not save that API key.");
+  } finally {
+    setPending(false);
+  }
+});
+
+elements.removeApiKey.addEventListener("click", async () => {
+  clearError();
+  setPending(true);
+
+  try {
+    await chrome.storage.local.remove(STORAGE_KEYS.OPENAI_API_KEY);
+    const state = await sendCommand({ type: MESSAGE_TYPE.API_KEY_CHANGED });
+    if (state) {
+      elements.apiKey.value = "";
+    }
+  } catch {
+    showError("Ollie could not remove that API key.");
+  } finally {
+    setPending(false);
+  }
 });
 
 chrome.runtime.onMessage.addListener((message) => {
@@ -90,8 +142,16 @@ function render() {
     appState.companion,
   );
   elements.currentTask.textContent = isActive
-    ? session.task
+    ? session.task || "Focus session"
     : "Choose one thing to finish.";
+  elements.commentaryStatus.hidden = !isActive;
+  elements.commentaryStatus.textContent = getCommentaryStatus(
+    session.commentarySource,
+  );
+  elements.apiKeyStatus.textContent = settings.hasApiKey
+    ? "Key saved locally"
+    : "No key saved";
+  elements.removeApiKey.hidden = !settings.hasApiKey;
   elements.focusMinutes.value = String(settings.focusMinutes);
   elements.breakMinutes.value = String(settings.breakMinutes);
   elements.task.disabled = isActive;
@@ -139,6 +199,18 @@ function getPhaseLabel(phase, companion) {
 function setPending(isPending) {
   elements.startButton.disabled = isPending;
   elements.stopButton.disabled = isPending;
+  elements.saveApiKey.disabled = isPending;
+  elements.removeApiKey.disabled = isPending;
+}
+
+function getCommentaryStatus(source) {
+  if (source === "pending") {
+    return "Ollie is preparing task-aware lines…";
+  }
+  if (source === "generated") {
+    return "Task-aware lines ready";
+  }
+  return "Using Ollie's bundled lines";
 }
 
 function showError(message) {

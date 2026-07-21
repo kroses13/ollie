@@ -12,6 +12,8 @@ export function startFocusSession(details, now = Date.now()) {
     phaseEndsAt: now + details.focusMinutes * MINUTE_IN_MS,
     focusMinutes: details.focusMinutes,
     breakMinutes: details.breakMinutes,
+    commentary: details.commentary,
+    commentarySource: details.commentarySource,
   };
 }
 

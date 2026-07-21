@@ -3,6 +3,11 @@ import {
   SESSION_PHASE,
   STATE_VERSION,
 } from "./constants.js";
+import {
+  COMMENTARY_SOURCE,
+  createFallbackCommentary,
+  normalizeCommentary,
+} from "./commentary.js";
 
 export function createDefaultSettings() {
   return { ...DEFAULT_SETTINGS };
@@ -17,6 +22,8 @@ export function createIdleSession() {
     phaseEndsAt: null,
     focusMinutes: DEFAULT_SETTINGS.focusMinutes,
     breakMinutes: DEFAULT_SETTINGS.breakMinutes,
+    commentary: createFallbackCommentary(),
+    commentarySource: COMMENTARY_SOURCE.FALLBACK,
   };
 }
 
@@ -65,6 +72,11 @@ export function normalizeSession(value) {
     breakMinutes: Number.isFinite(value.breakMinutes)
       ? value.breakMinutes
       : idle.breakMinutes,
+    commentary: normalizeCommentary(value.commentary),
+    commentarySource:
+      value.commentarySource === COMMENTARY_SOURCE.GENERATED
+        ? COMMENTARY_SOURCE.GENERATED
+        : COMMENTARY_SOURCE.FALLBACK,
   };
 }
 
@@ -107,6 +119,7 @@ export function createPublicState(
       focusMinutes: settings.focusMinutes,
       breakMinutes: settings.breakMinutes,
       colour: settings.colour,
+      hasApiKey: Boolean(settings.hasApiKey),
     },
     session: { ...session },
     runtime: publicRuntimeContext,

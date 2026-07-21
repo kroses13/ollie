@@ -83,12 +83,18 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 
 ## Milestone 4 — GPT-5.6 integration and security
 
+- [ ] A focus session starts when the optional task field is blank.
+- [ ] A blank task makes no OpenAI request and uses the shared bundled lines.
 - [ ] The popup saves the API key to `chrome.storage.local`.
+- [ ] The popup can replace and remove the stored key without reading it back.
 - [ ] The service worker is the only context that reads the key.
 - [ ] Content-script messages and state never contain the key.
 - [ ] Logs never contain the key or authorization header.
 - [ ] At most one commentary request occurs per session start.
+- [X] The request uses `gpt-5.6-luna` and the exact greeting/idle/distracted/
+      break/celebrate structured schema.
 - [ ] Valid generated lines are cached and displayed as text.
+- [ ] Animation ticks, phase changes, and tab changes do not make another call.
 - [ ] Missing key, timeout, HTTP failure, or malformed output uses bundled lines.
 - [ ] An OpenAI failure does not prevent the focus session from starting.
 
@@ -196,3 +202,65 @@ Chrome:
   escalation timing.
 - Confirm the refined coverage and event-by-event accumulation in an unpacked
   Chrome run on representative real webpages.
+
+## Verification record — 2026-07-20 (Milestone 4)
+
+Checks completed in the implementation environment:
+
+- A simulated extension-worker run accepted a blank task, started focus, used
+  the bundled commentary, and made zero API requests.
+- The same simulation confirmed a nonblank task with no stored key uses the
+  identical bundled fallback and makes zero API requests.
+- Saving a test-only placeholder key, starting a nonblank task, and returning a
+  valid structured response produced exactly one request and cached the
+  generated lines in the session.
+- Removing the key cleared its dedicated `chrome.storage.local` entry and
+  updated only the public `hasApiKey` metadata flag.
+- Local storage access is restricted to trusted extension contexts. The popup
+  writes but never reads the key, then sends the worker a key-free status
+  command; only the worker reads the stored value.
+- Serialized popup/content state did not contain the test-only key. Source
+  inspection and the message simulation confirm neither state nor runtime
+  commands contain it, and the storage read/request call sites are reachable
+  only from the background worker.
+- The request body uses `gpt-5.6-luna` and a strict schema containing
+  `greeting`, two `idle` lines, two `distracted` lines, two `break` lines, and
+  `celebrate`.
+- Mocked offline, HTTP-error, invalid-JSON, and malformed-schema responses were
+  rejected at the same client boundary and handled by the worker's one fallback
+  path.
+- A hanging mocked request was aborted by the configured 8,000ms timeout.
+- JavaScript syntax, manifest JSON, Git whitespace, and credential-pattern
+  scans pass.
+
+Still requires manual verification after loading the unpacked extension in
+Chrome:
+
+- Visually inspect the popup key controls and Ollie speech bubble on real pages.
+- Confirm popup-driven key save, replacement, and removal in extension storage.
+- Confirm a blank task starts immediately and shows bundled commentary.
+- Inspect the network panel and all extension/page consoles to confirm one call
+  per eligible session, no calls from ticks or state changes, and no key or
+  authorization-header logging.
+- Exercise an invalid key and offline mode in Chrome and confirm both preserve
+  the active focus session while showing the bundled-line status.
+
+## Verification record — 2026-07-21 (Milestone 4 live approval)
+
+The project owner completed a live unpacked-Chrome session with a real
+user-supplied key and a nonblank task:
+
+- The stored `commentarySource` was inspected through the service-worker
+  console and confirmed as `generated`, not `fallback`.
+- All eight cached lines were inspected: one greeting, two idle, two
+  distracted, two break, and one celebrate line.
+- The generated lines were confirmed to reference the submitted task rather
+  than reading as generic commentary.
+- This verifies that `gpt-5.6-luna` accepted the live request, the task text was
+  part of the request, the strict response passed validation, and the result
+  was cached in the active session.
+- No real key, task text, or generated line content is reproduced in this
+  repository record.
+
+Milestone 4 was manually approved after this verification. Unchecked scenarios
+above remain useful regression checks and are not implied by this approval.

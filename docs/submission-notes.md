@@ -37,15 +37,21 @@ punitive.
 - Translated the approved Ollie reference into the structured pixel-grid SVG
   system.
 - Created the reusable renderer, preview tooling, and implementation files.
-- Implemented the current Core Shell and will implement and iterate on later
-  extension functionality after milestone approval.
+- Implemented the Core Shell, cross-tab distraction intervention, and approved
+  Milestone 4 task-aware commentary flow.
 
 ### GPT-5.6
 
-- Intended to power the live in-product commentary or contextual companion
-  responses.
-- Final runtime model, endpoint, request schema, and demonstrated use: **record
-  after implementation**.
+- `gpt-5.6-luna` is configured to produce task-aware companion commentary from
+  one OpenAI Responses API request at focus-session start.
+- The strict response contains a greeting, two idle lines, two distracted
+  lines, two break lines, and one celebration line. Valid output is cached in
+  the local session and displayed only as text.
+- Blank tasks, missing keys, and request or validation failures all use the same
+  bundled commentary.
+- On 2026-07-21, the project owner verified a live request with a real
+  user-supplied key and nonblank task. The cached source was `generated`, and
+  all eight returned lines were confirmed as genuinely task-specific.
 
 ## 3. Key decisions
 
@@ -96,6 +102,8 @@ punitive.
 | 2026-07-20 | Canonical ink integration | Approved three-tier live library | Replaced the superseded eight-asset library with the approved canonical Small, Medium, and Large SVGs. Mapped them onto the unchanged eight spray events, tuned rendered scale only, and measured true visible-union coverage of 10.13% / 17.76% / 33.66% at 1280×900 while retaining fourteen total units. | Visually approved the reproduced SVG artwork and authorized the previously sequenced integration step. | `assets/ink/canonical/*.svg`, `content/ink-splatter-view.js`, `content/companion-view.js`, `content/animations.css`, `manifest.json`, `AGENTS.md`, `README.md`, `docs/ink-preview.html`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
 | 2026-07-20 | Ink rendering fine-tune | Randomized spread, reduced footprint, and stronger Final | Added a fresh seeded layout per attack, stratified same-event jitter, crisp quarter-turn rotations, two bounded offset droplets per unit, and wider Phase 2 spread. Reduced canonical unit scale by approximately 20% and increased Phase 2 and Final to two units per spray event without changing the eight-event timing sequence. Across 120 reference-viewport layouts, measured mean coverage was 6.04% / 14.01% / 32.36%. | Requested more organic repeat variation, wider same-event distribution, a smaller overall footprint, and a more pronounced Final escalation; explicitly allowed the previous coverage targets to change. Review is pending. | `content/ink-splatter-view.js`, `content/content-script.js`, `content/companion-view.js`, `content/animations.css`, `docs/distraction-preview.js`, `README.md`, `AGENTS.md`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
 | 2026-07-20 | Ink rendering fine-tune | Horizontal variation only | Removed all spray rotation while preserving the approved splatters, size, jitter, spread, droplets, unit allocation, and timing. Seeded variation now uses horizontal mirroring only. Across 120 reference-viewport layouts, measured mean coverage was 6.05% / 13.97% / 32.13%. | Approved the current sizing and requested horizontal flips as the sole orientation variation. | `content/ink-splatter-view.js`, `content/animations.css`, `docs/distraction-preview.js`, `README.md`, `AGENTS.md`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
+| 2026-07-20 | Milestone 4 | GPT-5.6 integration and BYOK security | Added the worker-only Responses API client, exact structured schema, optional-task flow, one shared bundled fallback, session caching, response validation, timeout, key save/remove controls, trusted-context storage restriction, key-free status messaging, sanitized public metadata, and text-only commentary rendering. Simulated blank-task, missing-key, success, failure, timeout, caching, and secret-isolation paths without using a real credential. | Approved the exact schema and flow, retained client-side BYOK for Build Week, and authorized Milestone 4 implementation. | `background/openai-client.js`, `background/service-worker.js`, `shared/commentary.js`, `shared/constants.js`, `shared/messages.js`, `shared/state.js`, `shared/storage.js`, `shared/validation.js`, `popup/*`, `content/companion-view.js`, `content/content-script.js`, `content/overlay.css`, `README.md`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
+| 2026-07-21 | Milestone 4 verification | Live task-aware commentary | Preserved the exact request and provided a key-safe service-worker console inspection path for the cached source and all eight lines. Recorded only the verification outcome, not the real key, task, or generated content. | Ran a live session with a real key and task, confirmed `commentarySource: generated`, verified all eight lines were task-specific, approved Milestone 4, and requested the commit. | `README.md`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
 
 ## 5. Human-led decisions
 
@@ -108,8 +116,14 @@ The following were manually reviewed and approved by the project owner:
 - Decision to use a structured SVG pixel grid.
 - Approval of the Stage 2 visual output after side-by-side review.
 - Approval of the Stage 2 Core Shell after implementation review.
+- Approval and commit of the complete Milestone 3 cross-tab distraction and
+  ink-animation implementation after iterative visual review.
 - Approval of the canonical Small, Medium, and Large ink SVG reproductions
   before intervention integration.
+- Approval of the Milestone 4 single-call schema, optional-task behavior,
+  unified fallback path, and client-side BYOK security boundary.
+- Live verification and approval of Milestone 4 after confirming generated,
+  task-specific commentary across the complete eight-line schema.
 
 ## 6. Repository and setup checklist
 
@@ -125,9 +139,11 @@ The following were manually reviewed and approved by the project owner:
 - [ ] Screenshots prepared.
 - [ ] Codex Session ID captured.
 - [ ] Devpost requirements rechecked.
-- [ ] GPT-5.6 runtime integration documented.
-- [ ] Security review completed.
-- [ ] API key confirmed absent from repository and extension bundle.
+- [X] GPT-5.6 runtime integration documented.
+- [X] Security review completed for the implemented client-side boundary;
+      unpacked-Chrome network and console inspection remains recorded in the
+      manual checklist.
+- [X] API key confirmed absent from repository and extension bundle.
 
 ## 7. Final submission copy
 

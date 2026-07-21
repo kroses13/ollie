@@ -1,4 +1,4 @@
-export const STATE_VERSION = 1;
+export const STATE_VERSION = 2;
 
 export const SESSION_PHASE = Object.freeze({
   IDLE: "idle",
@@ -11,6 +11,7 @@ export const PHASE_ALARM_NAME = "ollie-phase-end";
 export const STORAGE_KEYS = Object.freeze({
   SETTINGS: "ollieSettings",
   SESSION: "ollieSession",
+  OPENAI_API_KEY: "ollieOpenAiApiKey",
 });
 
 export const DEFAULT_SETTINGS = Object.freeze({
@@ -25,3 +26,4 @@ export const DURATION_LIMITS = Object.freeze({
 });
 
 export const MAX_TASK_LENGTH = 240;
+export const MAX_API_KEY_LENGTH = 512;

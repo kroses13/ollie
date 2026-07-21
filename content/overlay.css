@@ -34,3 +34,37 @@
 .ollie-pixel--sucker {
   fill: var(--ollie-sucker);
 }
+
+.ollie-commentary {
+  width: 148px;
+  padding: 8px 10px;
+  border: 2px solid var(--ollie-outline);
+  margin: 0;
+  color: var(--ollie-outline);
+  background: #fff9f5;
+  box-shadow: 3px 3px 0 rgb(48 40 49 / 18%);
+  font: 700 11px/1.35 ui-rounded, "SF Pro Rounded", "Segoe UI", sans-serif;
+  image-rendering: pixelated;
+  pointer-events: none;
+  position: absolute;
+  right: 82px;
+  top: 8px;
+  z-index: 3;
+}
+
+.ollie-commentary::after {
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--ollie-outline);
+  border-right: 2px solid var(--ollie-outline);
+  background: #fff9f5;
+  content: "";
+  position: absolute;
+  right: -6px;
+  top: 18px;
+  transform: rotate(45deg);
+}
+
+.ollie-commentary[hidden] {
+  display: none;
+}

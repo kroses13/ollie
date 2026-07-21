@@ -21,16 +21,16 @@
         <p class="phase-label" id="phase-label">Ready when you are</p>
         <p class="timer" id="timer">25:00</p>
         <p class="current-task" id="current-task">Choose one thing to finish.</p>
+        <p class="commentary-status" id="commentary-status" hidden></p>
       </section>
 
       <form id="session-form">
-        <label for="task">What are you working on?</label>
+        <label for="task">What are you working on? <span>(optional)</span></label>
         <textarea
           id="task"
           name="task"
           maxlength="240"
           placeholder="e.g. Finish the onboarding flow"
-          required
         ></textarea>
 
         <div class="duration-grid">
@@ -55,6 +55,26 @@
         <div class="actions">
           <button class="primary-button" id="start-button" type="submit">Start focus</button>
           <button class="secondary-button" id="stop-button" type="button" hidden>Stop session</button>
+        </div>
+      </form>
+
+      <form class="api-key-card" id="api-key-form">
+        <div class="api-key-heading">
+          <label for="api-key">OpenAI API key</label>
+          <span id="api-key-status">No key saved</span>
+        </div>
+        <input
+          autocomplete="off"
+          id="api-key"
+          maxlength="512"
+          name="apiKey"
+          placeholder="Paste a key to enable task-aware lines"
+          type="password"
+        >
+        <p class="api-key-note">Stored locally on this device and read only by Ollie's background worker.</p>
+        <div class="api-key-actions">
+          <button class="secondary-button" id="save-api-key" type="submit">Save key</button>
+          <button class="text-button" id="remove-api-key" type="button" hidden>Remove key</button>
         </div>
       </form>
     </main>

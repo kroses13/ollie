@@ -1,4 +1,8 @@
-import { DURATION_LIMITS, MAX_TASK_LENGTH } from "./constants.js";
+import {
+  DURATION_LIMITS,
+  MAX_API_KEY_LENGTH,
+  MAX_TASK_LENGTH,
+} from "./constants.js";
 
 function parseDuration(value, limits) {
   const duration = Number(value);
@@ -20,10 +24,6 @@ export function validateStartSessionPayload(payload) {
   }
 
   const task = typeof payload.task === "string" ? payload.task.trim() : "";
-  if (!task) {
-    return { ok: false, error: "Tell Ollie what you are working on." };
-  }
-
   if (task.length > MAX_TASK_LENGTH) {
     return {
       ok: false,
@@ -48,4 +48,22 @@ export function validateStartSessionPayload(payload) {
     ok: true,
     value: { task, focusMinutes, breakMinutes },
   };
+}
+
+export function validateApiKeyPayload(payload) {
+  if (!payload || typeof payload !== "object") {
+    return { ok: false, error: "API key details are missing." };
+  }
+
+  const apiKey =
+    typeof payload.apiKey === "string" ? payload.apiKey.trim() : "";
+  if (!apiKey) {
+    return { ok: false, error: "Enter an API key to save." };
+  }
+
+  if (apiKey.length > MAX_API_KEY_LENGTH) {
+    return { ok: false, error: "That API key is too long." };
+  }
+
+  return { ok: true, value: { apiKey } };
 }

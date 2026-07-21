@@ -36,3 +36,9 @@ export async function saveAppData(settings, session) {
     [STORAGE_KEYS.SESSION]: session,
   });
 }
+
+export async function loadApiKey() {
+  const stored = await chrome.storage.local.get(STORAGE_KEYS.OPENAI_API_KEY);
+  const apiKey = stored[STORAGE_KEYS.OPENAI_API_KEY];
+  return typeof apiKey === "string" ? apiKey : "";
+}
