@@ -3,7 +3,24 @@
 Use this checklist after implementing each milestone. Record anything that could
 not be tested; do not claim end-to-end verification without exercising Chrome.
 
+## Current milestone sequence
+
+| Milestone | Status |
+|---|---|
+| 1 — Scaffold | Complete and approved |
+| 2 — Core shell | Complete and approved |
+| 3 — Cross-tab distraction logic | Complete and approved |
+| 4 — GPT-5.6 integration and security | Complete, live-verified, and approved |
+| 5A — Production speech bubble | Complete and approved |
+| 5B — Ollie's states | Next |
+| 5C — Ink polish | Deferred; no work should begin without renewed approval |
+
+Unchecked items inside completed milestones remain useful regression scenarios;
+they do not override the recorded human approval for those milestones.
+
 ## Milestone 1 — Scaffold
+
+**Status:** Complete and approved.
 
 - [X] `manifest.json` parses successfully.
 - [X] The repository loads as an unpacked extension.
@@ -12,6 +29,8 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 - [X] No secret or local environment file is tracked.
 
 ## Milestone 2 — Core shell
+
+**Status:** Complete and approved. Unchecked items remain regression checks.
 
 - [ ] The approved reference appears beside the production SVG in the preview.
 - [ ] The neutral SVG matches the approved silhouette, proportions, expression,
@@ -29,6 +48,9 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 - [ ] Reloading or SPA navigation does not create duplicate roots.
 
 ## Milestone 3 — Cross-tab distraction logic
+
+**Status:** Complete and approved. Ink polish is deferred; preserve the current
+approved intervention while Ollie's states are developed.
 
 - [ ] Exact distraction hosts and intended subdomains match.
 - [ ] Lookalike hosts such as `notreddit.com` do not match.
@@ -83,6 +105,8 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 
 ## Milestone 4 — GPT-5.6 integration and security
 
+**Status:** Complete, live-verified with a real key, and approved.
+
 - [ ] A focus session starts when the optional task field is blank.
 - [ ] A blank task makes no OpenAI request and uses the shared bundled lines.
 - [ ] The popup saves the API key to `chrome.storage.local`.
@@ -98,15 +122,39 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 - [ ] Missing key, timeout, HTTP failure, or malformed output uses bundled lines.
 - [ ] An OpenAI failure does not prevent the focus session from starting.
 
-## Milestone 5 — Break, celebrate, colours, and polish
+## Milestone 5A — Production speech bubble
+
+**Status:** Complete and approved on 2026-07-21. The detailed verification
+record appears at the end of this document.
+
+## Milestone 5B — Ollie's states
+
+**Status:** Next implementation milestone. Do not alter the approved speech
+bubble or ink system while this work is in progress.
 
 - [ ] Focus completion triggers celebration once.
-- [ ] Break state uses its intended movement.
+- [ ] Idle/work has a readable neutral behavior and does not compete with the
+      page.
+- [ ] Distracted behavior communicates notice, warning, and increasing
+      confidence without changing intervention timing or ink allocation.
+- [ ] Break state uses its intended playful movement and cached break lines.
+- [ ] Celebration reads as a distinct one-time state and uses the cached
+      celebration line.
 - [ ] Session completion returns Ollie to the intended idle state.
+- [ ] State transitions do not leave stale transforms, bubbles, or temporary
+      character attributes behind.
+- [ ] Speech waits for a stable character moment and remains attached during
+      movement in every state.
 - [ ] Every colour changes body cells without separate companion assets.
 - [ ] Changing colour persists and updates open tabs.
 - [ ] Ollie does not block ordinary page interaction.
 - [ ] A typical site, an SPA, and a restricted Chrome page fail or render cleanly.
+
+## Milestone 5C — Ink polish — deferred
+
+**Status:** Deferred. The current approved canonical splatters, allocation,
+coverage behavior, choreography, cancellation, and timing remain unchanged.
+Do not start another ink refinement pass until it is explicitly rescheduled.
 
 ## Verification record — 2026-07-20
 
@@ -264,3 +312,95 @@ user-supplied key and a nonblank task:
 
 Milestone 4 was manually approved after this verification. Unchecked scenarios
 above remain useful regression checks and are not implied by this approval.
+
+## Character Polish — production speech bubble
+
+**Status:** Complete and approved on 2026-07-21.
+
+- [X] The coded frame matches the approved reference's near-black keyline,
+      denser rounded pixel corners, solid white fill, and cool-grey lower depth
+      accent.
+- [X] The canonical component orientation keeps its stepped pointer on the
+      lower-left edge.
+- [X] Left, right, top, and bottom pointer geometry allows the bubble to occupy
+      any of Ollie's four sides without rotating the text.
+- [X] Commentary and the sparkle form one centred content group inside the
+      bubble.
+- [X] The two-tone pixel sparkle supports yellow and grey palettes, appears for
+      short commentary, and remains clear of the text.
+- [X] Long commentary uses the wider interior, hides the decorative sparkle,
+      wraps naturally, and remains fully inside the frame without clipping.
+- [X] Commentary is inserted only through `textContent` and updates without
+      recreating the component.
+- [X] Generated and fallback commentary render identically; the bubble receives
+      plain text and has no source-specific presentation branch.
+- [X] Greeting, idle/working, distracted, break, and celebration commentary all
+      select the expected cached line shape.
+- [X] The appearance sequence reads as anticipation → stepped entrance →
+      readable pause → stepped dismissal without flicker.
+- [X] A bubble requested during hop, land, emerge, aim, or spray waits briefly
+      for a stable character moment before entering.
+- [X] At each viewport edge, the controller selects a fitting top, bottom, left,
+      or right position and changes the tail to point back toward Ollie.
+- [X] Edge and corner placements remain within the 12px viewport safe margin
+      and do not overlap Ollie when another side can fit.
+- [X] Long and short copy remain readable in wide, narrow, and compact bounds;
+      the frame and tail do not overflow the viewport.
+- [X] While Ollie's anchor moves, the visible bubble follows continuously and
+      recalculates its side without becoming fixed to the old viewport point.
+- [X] `docs/speech-bubble-preview.html` supports editable copy, all four pointer
+      positions, both sparkle palettes, production size, a 200% inspection
+      view, edge/corner movement, and wide/narrow/compact bounds.
+- [X] Ink behavior, intervention timing, Ollie choreography, GPT generation,
+      timer authority, and the session state machine remain unchanged.
+
+### Verification record — 2026-07-21
+
+Checks completed in the implementation environment:
+
+- The refined production component renders from a 120×52 integer SVG viewBox
+  at exactly two CSS pixels per grid unit, with
+  `shape-rendering="crispEdges"`; outline, depth, fill, and sparkle remain
+  separate coded layers.
+- Browser inspection confirmed the 240×104 production render and its 200%
+  scale preserve the stepped silhouette and hard pixel edges.
+- Left, right, top, and bottom controls each reveal exactly one matching coded
+  tail group without rotating or transforming the text.
+- Computed layout checks confirm the content group and bubble share the same
+  horizontal centre, with both flex alignment and text alignment set to centre.
+- Yellow and grey sparkle controls switch the palette without rebuilding the
+  component.
+- Live preview input updated both component instances through `textContent`.
+- A 119-character sample switched to the long-copy layout, hid the sparkle,
+  wrapped with no horizontal or vertical text overflow, and remained inside
+  the coded frame at a compact 196×84 render.
+- Automated browser geometry checks placed Ollie at the left, right, top, and
+  bottom edges. The bubble selected right/left/bottom/top respectively, used
+  the matching inward-facing tail, remained fully contained, and did not
+  overlap Ollie.
+- Compact top-left and bottom-right corner checks remained contained and
+  selected bottom/top placement with matching top/bottom tails.
+- The attachment lab verifies the same plain-text renderer independently of
+  commentary source. Runtime selection covers greeting, the idle pair used for
+  working, distracted, break, and the presentation-ready celebration string.
+- Tracking uses Ollie's live `getBoundingClientRect()` while the bubble is
+  visible, with a 12px safe margin, 8px anchor gap, and 48px orientation
+  hysteresis. It is requestAnimationFrame-bound and stops after dismissal.
+- Seven samples taken during a stepped cross-canvas trip remained inside the
+  preview bounds and did not overlap Ollie, including the live right-to-left
+  tail handoff.
+- The bubble and Ollie are siblings in the same stage. Moving or dragging the
+  existing anchor is supported; replacing the anchor node requires recreating
+  the controller.
+- The preview's “Speak after hop” control holds the bubble through a simulated
+  unstable behavior, then permits the normal anticipation and entrance after
+  the stage returns to idle.
+- JavaScript syntax, manifest JSON, SVG XML, and Git whitespace checks pass.
+
+Optional regression checks after future state work:
+
+- Compare the production and 200% views directly with the approved reference.
+- Inspect the production bubble beside Ollie in the unpacked extension on
+  representative webpages.
+- Confirm the anticipation, reading pause, and natural dismissal subjectively
+  match Ollie's character in a live focus session.

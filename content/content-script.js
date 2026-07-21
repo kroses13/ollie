@@ -22,10 +22,11 @@
   async function mountCompanion() {
     try {
       const [
-        { createOllieCharacter },
+        { createOllieCharacter, createOllieSpeechBubble },
         { createInterventionController },
         { createPixelInkField, randomizePixelInkField },
         { createOllieChoreography },
+        { createSpeechBubbleController },
         overlayCss,
         animationCss,
       ] = await Promise.all([
@@ -33,6 +34,7 @@
         import(chrome.runtime.getURL("content/intervention-controller.js")),
         import(chrome.runtime.getURL("content/ink-splatter-view.js")),
         import(chrome.runtime.getURL("content/ollie-choreography.js")),
+        import(chrome.runtime.getURL("content/speech-bubble-controller.js")),
         loadTextAsset("content/overlay.css"),
         loadTextAsset("content/animations.css"),
       ]);
@@ -59,14 +61,15 @@
 
       const inkField = createPixelInkField();
       const character = createOllieCharacter({ title: "Ollie" });
-      stage.append(character);
+      const commentary = createOllieSpeechBubble();
+      stage.append(character, commentary);
       shadowRoot.append(styles, inkField, stage);
       document.documentElement.append(host);
 
       companionElements = {
         host,
         inkField,
-        commentary: character.querySelector(".ollie-commentary"),
+        commentary,
         randomizePixelInkField,
         stage,
       };
@@ -74,6 +77,11 @@
         onBehaviorChange: applyCharacterBehavior,
         onPositionChange: applyCharacterPosition,
         onVisibleCountChange: applyVisibleInk,
+      });
+      companionElements.commentaryController = createSpeechBubbleController({
+        anchor: character,
+        bubble: commentary,
+        stage,
       });
       interventionController = createInterventionController({
         onStageChange: applyInterventionStage,
@@ -84,6 +92,7 @@
           clearInterval(commentaryIntervalId);
           interventionController?.dispose();
           companionElements?.choreography?.dispose();
+          companionElements?.commentaryController?.dispose();
         },
         { once: true },
       );
@@ -137,10 +146,7 @@
     }
 
     const line = selectCommentaryLine(latestState, Date.now());
-    companionElements.commentary.textContent = line;
-    companionElements.commentary.hidden = !line;
-    companionElements.commentary.dataset.source =
-      latestState.session.commentarySource ?? "fallback";
+    companionElements.commentaryController.present(line);
   }
 
   function selectCommentaryLine(state, now) {
@@ -148,6 +154,12 @@
     const commentary = session.commentary;
     if (!commentary || session.phase === "idle") {
       return "";
+    }
+
+    if (session.phase === "celebrate") {
+      return typeof commentary.celebrate === "string"
+        ? commentary.celebrate
+        : "";
     }
 
     if (

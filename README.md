@@ -38,7 +38,20 @@ remain sequenced for Milestone 5.
 
 Implementation proceeds only after approval for each milestone.
 
-Milestones 1–4 are implemented and approved. Milestone 5 has not started.
+Milestones 1–4 and the production speech-bubble slice are implemented and
+approved. Ollie's state work is next. A further ink-polish pass has been
+explicitly deferred.
+
+The first Character Polish slice is complete: the temporary
+commentary box has been replaced by a reusable coded speech bubble matching the
+approved frame, with denser rounded pixel corners, a lower depth accent, white
+fill, centred text-and-sparkle composition, four pointer positions, and yellow
+or grey sparkle palettes. The bubble now measures available viewport space on
+every visible frame, selects the best of Ollie's four sides, switches its tail,
+and clamps itself inside a 12px safe margin. It is mounted beside Ollie in the
+same moving stage, so future hops and dragging can move the anchor while the
+bubble follows. Ink rendering, intervention choreography, timers, session
+state, and GPT generation were not changed in this slice.
 
 ## Technical constraints
 
@@ -93,6 +106,29 @@ escalation sequence. Its live intent readout exposes the choreography for review
 and the controls can be collapsed so Ollie's full viewport path remains visible.
 The same page reports true visible ink coverage after clipping and overlap.
 
+To review the production speech bubble, open
+`http://127.0.0.1:4173/docs/speech-bubble-preview.html`. The preview accepts
+dynamic text, switches among left, right, top, and bottom pointer placements,
+switches the sparkle palette, and includes a 200% inspection view. Its
+attachment lab moves Ollie to edges and corners, simulates travel while he is
+speaking, and offers wide, narrow, and compact viewport bounds.
+
+The positioning controller compares the available space on each side of
+Ollie's current bounding box, prefers a side that fits the 240×104 natural
+frame, and uses a small orientation hysteresis to prevent tail flicker. If no
+side fits at natural size, it scales the coded frame to the available bounds;
+the final position is clamped inside the viewport. Tracking runs only while a
+message is preparing, visible, or dismissing. Commentary waits briefly for
+hop/land/aim/spray behavior to settle, then follows an anticipation → stepped
+entrance → length-aware reading pause → stepped dismissal sequence.
+
+The controller receives plain commentary text only. Generated and fallback
+lines share the same renderer, while the current working state intentionally
+uses the schema's `idle` pair. Celebration text is presentation-ready for the
+future phase; adding that phase remains Milestone 5 state-machine work. If a
+future implementation replaces Ollie's anchor element rather than moving it,
+the controller must be recreated with the replacement anchor.
+
 ## Roadmap
 
 V1.0 uses BYOK (user-supplied OpenAI API key, stored locally, never sent
@@ -115,5 +151,6 @@ backlog note only; dragging is not implemented in the current milestone.
 - [Ollie asset comparison](docs/ollie-preview.html)
 - [Production ink library](docs/ink-preview.html)
 - [Distraction intervention preview](docs/distraction-preview.html)
+- [Production speech bubble preview](docs/speech-bubble-preview.html)
 
 See `AGENTS.md` for implementation rules and milestone boundaries.

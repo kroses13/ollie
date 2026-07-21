@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ollie speech bubble preview</title>
+    <link rel="stylesheet" href="../content/overlay.css">
+    <link rel="stylesheet" href="speech-bubble-preview.css">
+  </head>
+  <body>
+    <main class="preview-shell">
+      <header>
+        <p class="eyebrow">Character polish</p>
+        <h1>Production speech bubble</h1>
+        <p class="intro">
+          The approved pixel frame rendered as a reusable coded component with
+          dynamic, centred text. Review all four tail positions, both sparkle palettes,
+          and viewport-aware attachment to a moving Ollie.
+        </p>
+      </header>
+
+      <section class="control-panel">
+        <label for="preview-copy">Commentary</label>
+        <textarea id="preview-copy" maxlength="120">You're doing
+great!</textarea>
+        <fieldset class="tail-controls">
+          <legend>Tail position</legend>
+          <label><input name="tail" type="radio" value="left" checked> Left — approved reference</label>
+          <label><input name="tail" type="radio" value="right"> Right</label>
+          <label><input name="tail" type="radio" value="top"> Top</label>
+          <label><input name="tail" type="radio" value="bottom"> Bottom</label>
+        </fieldset>
+        <fieldset class="sparkle-controls">
+          <legend>Sparkle colour</legend>
+          <label><input name="sparkle" type="radio" value="yellow" checked> Yellow</label>
+          <label><input name="sparkle" type="radio" value="grey"> Grey</label>
+        </fieldset>
+      </section>
+
+      <section class="comparison-grid">
+        <article class="preview-card">
+          <p class="card-label">Production size · 240×104</p>
+          <div class="bubble-mount" id="production-mount"></div>
+        </article>
+        <article class="preview-card preview-card--zoom">
+          <p class="card-label">200% inspection</p>
+          <div class="bubble-mount bubble-mount--zoom" id="zoom-mount"></div>
+        </article>
+      </section>
+
+      <section class="positioning-panel">
+        <div>
+          <p class="eyebrow">Attachment lab</p>
+          <h2>Viewport-aware placement</h2>
+          <p class="intro">
+            Move Ollie to an edge or send him across the canvas while the bubble
+            is speaking. The frame follows him and selects a visible side automatically.
+          </p>
+        </div>
+        <div class="lab-controls" aria-label="Positioning preview controls">
+          <button type="button" data-anchor-position="left">Left edge</button>
+          <button type="button" data-anchor-position="right">Right edge</button>
+          <button type="button" data-anchor-position="top">Top edge</button>
+          <button type="button" data-anchor-position="bottom">Bottom edge</button>
+          <button type="button" data-anchor-position="top-left">Top-left</button>
+          <button type="button" data-anchor-position="bottom-right">Bottom-right</button>
+          <button type="button" id="travel-button">Travel across</button>
+          <button type="button" id="hop-speak-button">Speak after hop</button>
+          <button type="button" id="speak-button">Speak again</button>
+        </div>
+        <div class="lab-size-controls" aria-label="Preview viewport size">
+          <button type="button" data-lab-size="wide">Wide</button>
+          <button type="button" data-lab-size="narrow">Narrow</button>
+          <button type="button" data-lab-size="compact">Compact</button>
+        </div>
+        <div class="positioning-lab" id="positioning-lab" data-size="wide">
+          <div class="positioning-stage" id="positioning-stage"></div>
+          <output class="placement-readout" id="placement-readout"></output>
+        </div>
+      </section>
+
+      <section class="detail-list">
+        <h2>Component layers</h2>
+        <ul>
+          <li>Near-black stepped keyline</li>
+          <li>Cool-grey lower depth accent</li>
+          <li>Solid white interior</li>
+          <li>Dynamic text rendered with <code>textContent</code></li>
+          <li>Two-tone yellow or grey pixel sparkle</li>
+          <li>Left, right, top, and bottom pointer geometry</li>
+          <li>Visible-only anchor tracking with orientation hysteresis</li>
+        </ul>
+      </section>
+    </main>
+    <script type="module" src="speech-bubble-preview.js"></script>
+  </body>
+</html>

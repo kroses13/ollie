@@ -4,6 +4,10 @@ import {
   OLLIE_GRID_WIDTH,
   OLLIE_IDLE_GRID,
 } from "./ollie-grid.js";
+import {
+  createSpeechBubble,
+  SPEECH_BUBBLE_TAIL_SIDE,
+} from "./speech-bubble.js";
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const DEFAULT_TITLE = "Ollie";
@@ -98,10 +102,12 @@ export function createOllieCharacter({ title = DEFAULT_TITLE } = {}) {
   const sprayPixel = document.createElement("div");
   sprayPixel.className = "ollie-spray-pixel";
 
-  const commentary = document.createElement("p");
-  commentary.className = "ollie-commentary";
-  commentary.hidden = true;
-
-  character.append(svg, warningInk, sprayPixel, commentary);
+  character.append(svg, warningInk, sprayPixel);
   return character;
+}
+
+export function createOllieSpeechBubble() {
+  return createSpeechBubble({
+    tailSide: SPEECH_BUBBLE_TAIL_SIDE.RIGHT,
+  });
 }

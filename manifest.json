@@ -39,6 +39,8 @@
         "content/intervention-controller.js",
         "content/ollie-choreography.js",
         "content/ollie-grid.js",
+        "content/speech-bubble.js",
+        "content/speech-bubble-controller.js",
         "content/overlay.css",
         "content/animations.css",
         "assets/ink/canonical/*.svg"
