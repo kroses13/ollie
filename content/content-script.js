@@ -26,6 +26,7 @@
         { createInterventionController },
         { createPixelInkField, randomizePixelInkField },
         { createOllieChoreography },
+        { createOllieDragController },
         { createSpeechBubbleController },
         overlayCss,
         animationCss,
@@ -34,6 +35,7 @@
         import(chrome.runtime.getURL("content/intervention-controller.js")),
         import(chrome.runtime.getURL("content/ink-splatter-view.js")),
         import(chrome.runtime.getURL("content/ollie-choreography.js")),
+        import(chrome.runtime.getURL("content/drag-controller.js")),
         import(chrome.runtime.getURL("content/speech-bubble-controller.js")),
         loadTextAsset("content/overlay.css"),
         loadTextAsset("content/animations.css"),
@@ -78,6 +80,10 @@
         onPositionChange: applyCharacterPosition,
         onVisibleCountChange: applyVisibleInk,
       });
+      companionElements.dragController = createOllieDragController({
+        character,
+        positionElement: host,
+      });
       companionElements.commentaryController = createSpeechBubbleController({
         anchor: character,
         bubble: commentary,
@@ -93,6 +99,7 @@
           interventionController?.dispose();
           companionElements?.choreography?.dispose();
           companionElements?.commentaryController?.dispose();
+          companionElements?.dragController?.dispose();
         },
         { once: true },
       );
@@ -193,6 +200,7 @@
     }
 
     if (interventionStage === "warning") {
+      companionElements.dragController.resetToAnchor();
       companionElements.randomizePixelInkField(companionElements.inkField);
     }
 

@@ -99,10 +99,18 @@ developed.
 - [ ] The preview reports Ollie's current intent and its panel can collapse so
       bottom-edge and behind-ink travel remain visible.
 
-### Interaction backlog — not implemented
+### Interaction scope
 
-- [ ] Make Ollie draggable and persist his position so the default top-right
-      placement cannot obstruct webpage controls.
+- [X] Click-and-hold dragging repositions Ollie in real time and clamps the
+      released character within the visible viewport.
+- [X] Existing idle and speech behavior continues from the current dragged
+      position without rewiring choreography state.
+- [X] A distraction warning resets Ollie to the original anchor before the
+      unchanged attack choreography begins.
+- [X] Reloading resets Ollie to the normal default position; no drag position is
+      persisted in this pass.
+- [ ] Optionally persist Ollie's position and introduce a formal home-position
+      concept in a later approved milestone.
 
 ## Milestone 4 — GPT-5.6 integration and security
 
@@ -146,6 +154,8 @@ bubble or ink system while this work is in progress.
       character attributes behind.
 - [ ] Speech waits for a stable character moment and remains attached during
       movement in every state.
+- [X] Basic dragging moves the current character host without changing state
+      transitions, timers, commentary, or intervention behavior.
 - [ ] Every colour changes body cells without separate companion assets.
 - [ ] Changing colour persists and updates open tabs.
 - [ ] Ollie does not block ordinary page interaction.
@@ -174,6 +184,23 @@ visual ink refinement until it is explicitly rescheduled.
 - Warning, Phase 1, phase durations, spray-event count, choreography,
   cancellation, tab scoping, detection, privacy behavior, and SVG silhouettes
   were not modified.
+
+### Verification record — 2026-07-21 (basic drag repositioning)
+
+- The production drag controller listens only on Ollie's 96×72 character area;
+  the surrounding host remains non-interactive.
+- A live drag moved Ollie from `[1168, 76]` to `[352, 284]` without modifying
+  the stage's choreography transform values.
+- Top-left and bottom-right over-drag checks clamped the character to
+  `[0, 0, 96, 72]` and `[1184, 648, 1280, 720]` respectively.
+- Reloading returned Ollie to the normal top-right position, confirming that no
+  position is stored.
+- After dragging Ollie away from the top-right corner, starting the real
+  escalation restored the original anchor before the warning choreography ran.
+- The existing warning, phase timing, movement choreography, and ink positioning
+  then continued from the canonical anchor without modification.
+- No timer, commentary generation/cache, intervention, ink, hostname, tab, or
+  session-state logic was changed.
 
 ## Verification record — 2026-07-20
 

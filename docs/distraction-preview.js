@@ -1,4 +1,5 @@
 import { createOllieCharacter } from "../content/companion-view.js";
+import { createOllieDragController } from "../content/drag-controller.js";
 import {
   createPixelInkField,
   randomizePixelInkField,
@@ -73,6 +74,9 @@ const SEQUENCE = Object.freeze([
 
 const inkField = createPixelInkField();
 const ollieStage = createOllieStage();
+const olliePosition = document.createElement("div");
+olliePosition.className = "ollie-preview-position";
+olliePosition.append(ollieStage);
 const stateTitle = document.querySelector("#state-title");
 const stateDescription = document.querySelector("#state-description");
 const coverageLabel = document.querySelector("#coverage-label");
@@ -96,12 +100,17 @@ const choreography = createOllieChoreography({
   onVisibleCountChange: applyVisibleInk,
 });
 
-document.body.append(inkField, ollieStage);
+document.body.append(inkField, olliePosition);
+const dragController = createOllieDragController({
+  character: ollieStage.querySelector(".ollie-character"),
+  positionElement: olliePosition,
+});
 populateInkComparisons();
 window.addEventListener(
   "pagehide",
   () => {
     choreography.dispose();
+    dragController.dispose();
     window.clearTimeout(coverageTimer);
   },
   { once: true },
@@ -169,6 +178,10 @@ function applyState(state) {
   const details = STATE_DETAILS[state];
   if (!details) {
     return;
+  }
+
+  if (state !== "idle") {
+    dragController.resetToAnchor();
   }
 
   ollieStage.dataset.intervention = state;

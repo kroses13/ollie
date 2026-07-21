@@ -35,6 +35,7 @@
     {
       "resources": [
         "content/companion-view.js",
+        "content/drag-controller.js",
         "content/ink-splatter-view.js",
         "content/intervention-controller.js",
         "content/ollie-choreography.js",

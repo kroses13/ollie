@@ -21,12 +21,20 @@
 }
 
 .ollie-character {
+  cursor: grab;
   display: grid;
   width: 96px;
   height: 72px;
   place-items: center;
+  pointer-events: auto;
   position: relative;
+  touch-action: none;
   transform-origin: center bottom;
+  user-select: none;
+}
+
+.ollie-character[data-dragging="true"] {
+  cursor: grabbing;
 }
 
 .ollie-character .ollie-svg {

@@ -55,6 +55,14 @@ same moving stage, so future hops and dragging can move the anchor while the
 bubble follows. Ink rendering, intervention choreography, timers, session
 state, and GPT generation were not changed in this slice.
 
+Ollie also supports basic in-memory repositioning. Click and hold the character,
+drag him to another visible point, and release to leave him there. The position
+is clamped to the current viewport and remains the base for idle and speech
+behavior. When a distraction warning begins, Ollie immediately resets to the
+original top-right anchor before the existing attack choreography runs, keeping
+the tested ink origin intact. This pass deliberately does not persist a home
+position or change the existing behavior state machine.
+
 ## Technical constraints
 
 - Chrome Extension Manifest V3
@@ -80,6 +88,56 @@ The task field is optional. To enable task-aware commentary, paste an OpenAI API
 key into the popup and choose **Save key**. The popup never reads a saved key
 back from storage; it receives only a `hasApiKey` status flag. Starting with a
 blank task deliberately skips the API request and uses bundled commentary.
+
+## OpenAI API key setup
+
+Ollie supports personalised, task-aware commentary through the OpenAI API.
+
+To enable it, create an API key from the
+[OpenAI Platform](https://platform.openai.com/api-keys) and paste it into
+Ollie's popup settings. The key is stored locally in your browser and is used
+only to request commentary for your focus sessions.
+
+OpenAI API usage is billed separately from ChatGPT subscriptions, as explained
+in [OpenAI's API billing guidance](https://help.openai.com/en/articles/8156019-i-want-to-move-my-chatgpt-subscription-to-the-api).
+New API users may need to add prepaid credits, with a current minimum purchase
+of US$5 according to
+[OpenAI's prepaid-billing guidance](https://help.openai.com/en/articles/8264778-what-is-prepaid-billing).
+
+### Why Ollie uses your own API key
+
+Ollie follows a bring-your-own-key model rather than routing every user's
+requests through a shared project key.
+
+This approach:
+
+- keeps control of API access and spending with the user
+- avoids distributing a shared secret inside the browser extension
+- prevents one user's activity from consuming another user's allowance
+- allows users to review and manage their own API usage directly
+- introduces users to how API-powered products connect securely to an AI
+  service
+
+Your API key is not included with Ollie, committed to the repository, or shared
+with other users.
+
+Treat it like a password: do not post it publicly or share it with anyone.
+
+### Ollie still works without an API key
+
+An API key is optional.
+
+Without one, Ollie's core companion features continue to work normally,
+including:
+
+- focus and break timers
+- distraction detection
+- character movement and reactions
+- fallback dialogue
+- other local extension behaviour
+
+Adding a key only enables personalised commentary generated for the task and
+focus-session context you provide.
 
 ## Repository layout
 
@@ -143,9 +201,9 @@ OpenAI Responses API. The key and authorization header are never included in
 content-script state or logs. BYOK in `chrome.storage.local` is an MVP tradeoff,
 not secure secret storage.
 
-Next interaction milestone: make Ollie draggable and persist his position so
-the default top-right placement cannot obstruct webpage controls. This is a
-backlog note only; dragging is not implemented in the current milestone.
+Basic dragging is implemented without persistence. A later interaction
+milestone may persist Ollie's position or introduce a formal home position;
+neither is part of the current build.
 
 ## Documentation
 

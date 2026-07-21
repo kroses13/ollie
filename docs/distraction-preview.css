@@ -413,11 +413,16 @@ h1 {
   inset: auto;
 }
 
-.ollie-stage {
+.ollie-preview-position {
+  pointer-events: none;
   position: fixed;
   top: 74px;
   right: 16px;
   z-index: 2147483001;
+}
+
+.ollie-preview-position .ollie-stage {
+  position: relative;
 }
 
 .ollie-ink-field {
