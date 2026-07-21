@@ -5,6 +5,8 @@
   --ollie-highlight: #ffe3d5;
   --ollie-eye: var(--ollie-outline);
   --ollie-sucker: #fff0c9;
+  --ollie-prop-grey: #a9adb7;
+  --ollie-prop-handle: #8b5a3c;
 
   display: block;
   overflow: visible;
@@ -33,6 +35,32 @@
 
 .ollie-pixel--sucker {
   fill: var(--ollie-sucker);
+}
+
+.ollie-pixel--prop-grey {
+  fill: var(--ollie-prop-grey);
+}
+
+.ollie-pixel--prop-handle {
+  fill: var(--ollie-prop-handle);
+}
+
+.ollie-pose-layer {
+  display: none;
+}
+
+.ollie-svg[data-pose="idle"] .ollie-pose-layer[data-pose="idle"],
+.ollie-svg[data-pose="look-left"] .ollie-pose-layer[data-pose="look-left"],
+.ollie-svg[data-pose="look-right"] .ollie-pose-layer[data-pose="look-right"],
+.ollie-svg[data-pose="thinking"] .ollie-pose-layer[data-pose="thinking"],
+.ollie-svg[data-pose="holding-hammer"]
+  .ollie-pose-layer[data-pose="holding-hammer"],
+.ollie-svg[data-pose="hammer-strike"]
+  .ollie-pose-layer[data-pose="hammer-strike"],
+.ollie-svg[data-pose="working-laptop"]
+  .ollie-pose-layer[data-pose="working-laptop"],
+.ollie-svg[data-pose="sleeping"] .ollie-pose-layer[data-pose="sleeping"] {
+  display: block;
 }
 
 .ollie-speech-bubble {

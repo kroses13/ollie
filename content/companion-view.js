@@ -3,6 +3,9 @@ import {
   OLLIE_GRID_HEIGHT,
   OLLIE_GRID_WIDTH,
   OLLIE_IDLE_GRID,
+  OLLIE_POSE,
+  OLLIE_POSE_GRIDS,
+  OLLIE_POSE_LAYOUTS,
 } from "./ollie-grid.js";
 import {
   createSpeechBubble,
@@ -11,6 +14,7 @@ import {
 
 const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const DEFAULT_TITLE = "Ollie";
+const RENDERED_PIXEL_SIZE = 4;
 
 function createPixelLayer(layerName, grid, groupedPixels = []) {
   const layer = document.createElementNS(SVG_NAMESPACE, "g");
@@ -48,6 +52,7 @@ export function createOllieSvg({
   title = DEFAULT_TITLE,
   actionTentacleVisible = true,
   className = "",
+  pose = OLLIE_POSE.IDLE,
 } = {}) {
   const svg = document.createElementNS(SVG_NAMESPACE, "svg");
   svg.setAttribute("xmlns", SVG_NAMESPACE);
@@ -56,28 +61,70 @@ export function createOllieSvg({
   svg.setAttribute("role", "img");
   svg.setAttribute("aria-label", title);
   svg.setAttribute("class", ["ollie-svg", className].filter(Boolean).join(" "));
+  applySvgPoseLayout(svg, pose);
 
-  svg.append(
-    createPixelLayer("idle-body", OLLIE_IDLE_GRID, [
-      {
-        id: "ollie-left-ear",
-        includes: (x, y) => x <= 5 && y >= 3 && y <= 9,
-      },
-    ]),
-  );
+  const idleBody = createPixelLayer("idle-body", OLLIE_IDLE_GRID, [
+    {
+      id: "ollie-left-ear",
+      includes: (x, y) => x <= 5 && y >= 3 && y <= 9,
+    },
+  ]);
+  idleBody.classList.add("ollie-pose-layer");
+  idleBody.dataset.pose = OLLIE_POSE.IDLE;
+  svg.append(idleBody);
 
   const actionTentacle = createPixelLayer(
     "action-tentacle",
     OLLIE_ACTION_TENTACLE_GRID,
   );
   actionTentacle.id = "ollie-action-tentacle";
+  actionTentacle.classList.add("ollie-pose-layer");
+  actionTentacle.dataset.pose = OLLIE_POSE.IDLE;
   actionTentacle.hidden = !actionTentacleVisible;
   if (!actionTentacleVisible) {
     actionTentacle.setAttribute("display", "none");
   }
   svg.append(actionTentacle);
 
+  Object.entries(OLLIE_POSE_GRIDS).forEach(([poseName, grid]) => {
+    const poseLayer = createPixelLayer(`${poseName}-body`, grid);
+    poseLayer.classList.add("ollie-pose-layer");
+    poseLayer.dataset.pose = poseName;
+    svg.append(poseLayer);
+  });
+
   return svg;
+}
+
+export function setOlliePose(target, pose) {
+  const svg = target.matches?.(".ollie-svg")
+    ? target
+    : target.querySelector?.(".ollie-svg");
+  if (!svg || !Object.values(OLLIE_POSE).includes(pose)) {
+    return false;
+  }
+
+  const layout = applySvgPoseLayout(svg, pose);
+  const character = target.matches?.(".ollie-character")
+    ? target
+    : target.closest?.(".ollie-character");
+  if (character) {
+    character.style.width = `${layout.width * RENDERED_PIXEL_SIZE}px`;
+    character.style.height = `${layout.height * RENDERED_PIXEL_SIZE}px`;
+    character.dataset.pose = pose;
+  }
+  return true;
+}
+
+function applySvgPoseLayout(svg, pose) {
+  const layout = OLLIE_POSE_LAYOUTS[pose] ?? OLLIE_POSE_LAYOUTS[OLLIE_POSE.IDLE];
+  svg.dataset.pose = OLLIE_POSE_LAYOUTS[pose] ? pose : OLLIE_POSE.IDLE;
+  svg.dataset.gridWidth = String(layout.width);
+  svg.dataset.gridHeight = String(layout.height);
+  svg.setAttribute("viewBox", `0 0 ${layout.width} ${layout.height}`);
+  svg.setAttribute("width", String(layout.width * RENDERED_PIXEL_SIZE));
+  svg.setAttribute("height", String(layout.height * RENDERED_PIXEL_SIZE));
+  return layout;
 }
 
 export function createOllieCharacter({ title = DEFAULT_TITLE } = {}) {
@@ -85,8 +132,6 @@ export function createOllieCharacter({ title = DEFAULT_TITLE } = {}) {
   character.className = "ollie-character";
 
   const svg = createOllieSvg({ title });
-  svg.setAttribute("width", "96");
-  svg.setAttribute("height", "72");
 
   const warningInk = document.createElement("img");
   warningInk.className = "ollie-warning-ink";
@@ -103,6 +148,7 @@ export function createOllieCharacter({ title = DEFAULT_TITLE } = {}) {
   sprayPixel.className = "ollie-spray-pixel";
 
   character.append(svg, warningInk, sprayPixel);
+  setOlliePose(character, OLLIE_POSE.IDLE);
   return character;
 }
 

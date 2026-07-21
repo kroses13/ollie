@@ -138,21 +138,23 @@ record appears at the end of this document.
 
 ## Milestone 5B — Ollie's states
 
-**Status:** Next implementation milestone. Do not alter the approved speech
-bubble or ink system while this work is in progress.
+**Status:** Production pose and ambient-behavior pass implemented on 2026-07-21.
+Celebration and colour variants remain separate work; the hop cycle is
+explicitly deferred.
 
 - [ ] Focus completion triggers celebration once.
-- [ ] Idle/work has a readable neutral behavior and does not compete with the
+- [X] Idle/work has a readable neutral behavior and does not compete with the
       page.
-- [ ] Distracted behavior communicates notice, warning, and increasing
+- [X] Distracted behavior communicates notice, warning, and increasing
       confidence without changing intervention timing or ink allocation.
-- [ ] Break state uses its intended playful movement and cached break lines.
+- [X] Break state interrupts ambient work, uses the sleeping pose, and continues
+      to display cached break lines.
 - [ ] Celebration reads as a distinct one-time state and uses the cached
       celebration line.
 - [ ] Session completion returns Ollie to the intended idle state.
-- [ ] State transitions do not leave stale transforms, bubbles, or temporary
+- [X] State transitions do not leave stale transforms, bubbles, or temporary
       character attributes behind.
-- [ ] Speech waits for a stable character moment and remains attached during
+- [X] Speech waits for a stable character moment and remains attached during
       movement in every state.
 - [X] Basic dragging moves the current character host without changing state
       transitions, timers, commentary, or intervention behavior.
@@ -160,6 +162,40 @@ bubble or ink system while this work is in progress.
 - [ ] Changing colour persists and updates open tabs.
 - [ ] Ollie does not block ordinary page interaction.
 - [ ] A typical site, an SPA, and a restricted Chrome page fail or render cleanly.
+
+### Verification record — 2026-07-21 (production poses and ambient behavior)
+
+- References 5, 6, 7, 8, 9, 10, and 12 were reproduced as hand-authored SVG
+  rect grids using the current production Ollie palette and proportions.
+- Non-prop poses stay on the canonical 24×18 canvas. Holding/strike use 32×18
+  and laptop uses 36×18, preserving Ollie's body cells at the same scale while
+  giving each prop independent space.
+- The asset preview displays the approved model sheet and all seven generated
+  poses together; all SVG cells are integer-aligned and use `crispEdges`.
+- The production behavior controller showed thinking before the existing speech
+  bubble, then returned to idle while the commentary remained visible.
+- Shortened preview-only timing observed idle looks, laptop, holding-hammer,
+  hammer-strike, and idle through the same production controller.
+- Starting break while a hammer pose was active changed immediately to sleeping;
+  returning to focus restored idle.
+- Production timing retains the requested randomized 45–90 second laptop delay.
+- The live footprint check passed all six left/right edge combinations across
+  holding-hammer, hammer-strike, and laptop using the production drag clamp.
+- Final pose-art pass assigns laptop panels and hammer heads to a dedicated
+  light neutral-grey role and hammer handles to a flat brown role while leaving
+  every body role and colour unchanged.
+- Holding and strike now show distinct raised and downward-impact hammer angles;
+  both handles use connected two-cell steps with no gap from the gripping
+  tentacle. Laptop work uses a slight body lean, rightward gaze, and a tentacle
+  contacting the light-grey work surface; sleeping includes a visible outlined
+  curl on the right.
+- The final preview re-ran the six prop/edge clamp cases after the larger-canvas
+  artwork changed.
+- The live SVG uses one inherited 90% CSS display scale across idle, look,
+  thinking, hammer, laptop, and sleeping poses; grid data and viewBoxes remain
+  unchanged.
+- Hop-cycle poses were not implemented. Ink, timer, commentary
+  generation/cache, tab scoping, detection, and privacy logic were unchanged.
 
 ## Milestone 5C — Ink polish — broadly deferred
 

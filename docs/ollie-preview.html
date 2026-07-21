@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ollie asset comparison</title>
+    <link rel="stylesheet" href="../content/overlay.css">
+    <link rel="stylesheet" href="../content/animations.css">
     <link rel="stylesheet" href="ollie-preview.css">
   </head>
   <body>
@@ -30,8 +32,53 @@
       </section>
 
       <section class="sizes" id="size-previews"></section>
+
+      <section class="pose-checkpoint">
+        <div class="pose-checkpoint__header">
+          <div>
+            <p class="eyebrow">Production pose checkpoint</p>
+            <h2>Approved model sheet → canonical 24×18 grids</h2>
+          </div>
+          <p>
+            Composition follows references 5, 6, 7, 8, 9, 10, and 12. Palette and
+            pixel treatment follow the existing production Ollie asset.
+          </p>
+        </div>
+        <div class="model-sheet-frame">
+          <img
+            src="reference/ollie-production-sheet.png"
+            alt="Approved Ollie production model sheet"
+          >
+        </div>
+        <div class="pose-grid" id="pose-grid"></div>
+      </section>
+
+      <section class="behavior-lab">
+        <div>
+          <p class="eyebrow">Live production behavior</p>
+          <h2>State and speech sequence</h2>
+          <p class="behavior-lab__copy">
+            This uses the production controller with shortened preview-only
+            idle delays. Look poses rotate automatically; laptop and hammer
+            work alternate.
+          </p>
+          <div class="behavior-lab__controls">
+            <button type="button" data-demo="speak">Think → speak</button>
+            <button type="button" data-demo="distract">Interrupt / distract</button>
+            <button type="button" data-demo="break">Start break</button>
+            <button type="button" data-demo="focus">Wake / focus</button>
+          </div>
+          <p class="behavior-lab__status">
+            Current production pose: <strong id="behavior-pose">idle</strong>
+          </p>
+          <p class="behavior-lab__status" id="footprint-check">
+            Edge footprint check: running…
+          </p>
+        </div>
+        <div class="behavior-lab__viewport" id="behavior-viewport"></div>
+      </section>
     </main>
 
-    <script type="module" src="ollie-preview.js"></script>
+    <script type="module" src="ollie-preview.js?v=hammer-materials"></script>
   </body>
 </html>

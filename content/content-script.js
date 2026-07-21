@@ -25,6 +25,7 @@
         { createOllieCharacter, createOllieSpeechBubble },
         { createInterventionController },
         { createPixelInkField, randomizePixelInkField },
+        { createOllieBehaviorController },
         { createOllieChoreography },
         { createOllieDragController },
         { createSpeechBubbleController },
@@ -34,6 +35,7 @@
         import(chrome.runtime.getURL("content/companion-view.js")),
         import(chrome.runtime.getURL("content/intervention-controller.js")),
         import(chrome.runtime.getURL("content/ink-splatter-view.js")),
+        import(chrome.runtime.getURL("content/ollie-behavior-controller.js")),
         import(chrome.runtime.getURL("content/ollie-choreography.js")),
         import(chrome.runtime.getURL("content/drag-controller.js")),
         import(chrome.runtime.getURL("content/speech-bubble-controller.js")),
@@ -89,6 +91,13 @@
         bubble: commentary,
         stage,
       });
+      companionElements.behaviorController = createOllieBehaviorController({
+        character,
+        onFootprintChange: () => {
+          companionElements.dragController.clampCurrentPosition({ force: true });
+        },
+        speechBubbleController: companionElements.commentaryController,
+      });
       interventionController = createInterventionController({
         onStageChange: applyInterventionStage,
       });
@@ -99,6 +108,7 @@
           interventionController?.dispose();
           companionElements?.choreography?.dispose();
           companionElements?.commentaryController?.dispose();
+          companionElements?.behaviorController?.dispose();
           companionElements?.dragController?.dispose();
         },
         { once: true },
@@ -141,6 +151,10 @@
       "important",
     );
     companionElements.stage.dataset.phase = phase;
+    companionElements.behaviorController.setSessionState({
+      phase,
+      isDistracted: Boolean(state.companion?.isDistracted),
+    });
     interventionController?.setDistracted(
       Boolean(state.companion?.isDistracted),
     );
@@ -153,7 +167,7 @@
     }
 
     const line = selectCommentaryLine(latestState, Date.now());
-    companionElements.commentaryController.present(line);
+    companionElements.behaviorController.present(line);
   }
 
   function selectCommentaryLine(state, now) {
@@ -213,6 +227,7 @@
     companionElements.stage.dataset.behavior = behavior;
     companionElements.inkField.dataset.behavior = behavior;
     companionElements.stage.dataset.confidence = confidence;
+    companionElements.behaviorController.setChoreographyBehavior(behavior);
   }
 
   function applyCharacterPosition(position, travelMs) {

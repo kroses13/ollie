@@ -25,8 +25,10 @@ Task-aware commentary now uses a single session-start request to
 present. The worker validates and caches the strict structured response for the
 whole session. A blank task, missing key, timeout, HTTP error, offline state, or
 malformed response all use the same bundled Ollie lines without preventing the
-timer from starting. Break-specific animation, celebration, and colour variants
-remain sequenced for Milestone 5.
+timer from starting. The production character library now also includes the
+approved looking-left, looking-right, thinking, holding-hammer, hammer-strike,
+laptop-work, and sleeping poses.
+Celebration and colour variants remain separate Milestone 5 work.
 
 ## Planned milestones
 
@@ -39,10 +41,12 @@ remain sequenced for Milestone 5.
 Implementation proceeds only after approval for each milestone.
 
 Milestones 1–4 and the production speech-bubble slice are implemented and
-approved. Ollie's state work is next. A broad ink-polish pass remains deferred;
-a separately approved density adjustment raised Phase 2 by approximately eight
-coverage points and Final by approximately sixteen points without changing the
-canonical artwork or intervention sequence.
+approved. Ollie's production pose and ambient-behavior pass is implemented;
+this final pose-art pass closes the submission animation scope. A broad
+ink-polish pass remains deferred; a separately approved
+density adjustment raised Phase 2 by approximately eight coverage points and
+Final by approximately sixteen points without changing the canonical artwork
+or intervention sequence.
 
 The first Character Polish slice is complete: the temporary
 commentary box has been replaced by a reusable coded speech bubble matching the
@@ -62,6 +66,28 @@ behavior. When a distraction warning begins, Ollie immediately resets to the
 original top-right anchor before the existing attack choreography runs, keeping
 the tested ink origin intact. This pass deliberately does not persist a home
 position or change the existing behavior state machine.
+
+Ollie's seven additional production poses are hand-authored role grids and
+checked in as reusable SVGs under `assets/ollie-poses/`. Non-prop poses retain
+the canonical 24×18 canvas. Hammer poses use 32×18 and the laptop uses 36×18 so
+Ollie's body cells remain at the same scale and proportions while props occupy
+their own space. Hammer heads and laptop panels use a dedicated light
+neutral-grey prop role; hammer handles use a separate flat brown role, leaving
+Ollie's body palette untouched. The hammer pair
+now reads as a raised ready position followed by a downward impact angle; the
+laptop pose leans and looks toward the screen with a tentacle placed at the
+work surface, and the sleeping silhouette has a balanced right-hand curl.
+During an undistracted
+focus session he occasionally looks left or right and, every randomized 45–90
+seconds, alternates naturally between laptop work and a two-pose hammer action.
+New commentary uses a thinking → speaking sequence before the existing bubble
+appears. Break start immediately interrupts ambient work and transitions to
+sleeping; returning to focus wakes Ollie. Pose changes use a short anticipation
+→ action → settle treatment without changing timer, commentary, distraction, or
+ink logic. Each prop-pose footprint triggers the existing viewport clamp so the
+wider canvas remains visible at either edge.
+The shared page renderer applies a uniform 90% display scale to the SVG in
+every pose without changing the authored grids, viewBoxes, or pixel geometry.
 
 ## Technical constraints
 
@@ -204,6 +230,9 @@ not secure secret storage.
 Basic dragging is implemented without persistence. A later interaction
 milestone may persist Ollie's position or introduce a formal home position;
 neither is part of the current build.
+
+The hop-cycle poses shown on the production model sheet remain deferred roadmap
+work and are not part of the submission animation set.
 
 ## Documentation
 

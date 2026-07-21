@@ -124,9 +124,13 @@ export function createOllieDragController({
     );
   }
 
-  function clampCurrentPosition() {
-    if (!hasCustomPosition || activeDrag) {
+  function clampCurrentPosition({ force = false } = {}) {
+    if (activeDrag || (!hasCustomPosition && !force)) {
       return;
+    }
+
+    if (!hasCustomPosition) {
+      restorePositionStyles(positionElement, anchorPositionStyles);
     }
 
     const characterRect = character.getBoundingClientRect();
