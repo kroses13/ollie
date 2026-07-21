@@ -12,6 +12,11 @@ import { OLLIE_POSE, OLLIE_POSE_LAYOUTS } from "../content/ollie-grid.js";
 import { createOllieDragController } from "../content/drag-controller.js";
 import { createSpeechBubbleController } from "../content/speech-bubble-controller.js";
 
+const previewParameters = new URLSearchParams(window.location.search);
+if (previewParameters.get("background") === "plain") {
+  document.documentElement.dataset.previewBackground = "plain";
+}
+
 const heroPreview = document.querySelector("#hero-preview");
 const heroSvg = createOllieSvg({ className: "hero-svg" });
 heroPreview.append(heroSvg);

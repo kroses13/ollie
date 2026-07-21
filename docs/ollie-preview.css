@@ -321,6 +321,10 @@ h1 {
   background-size: 16px 16px;
 }
 
+:root[data-preview-background="plain"] .behavior-lab__viewport {
+  background: #fff9f5;
+}
+
 .behavior-lab__stage {
   position: relative;
 }
