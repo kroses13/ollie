@@ -25,6 +25,13 @@ const elements = {
 };
 
 let appState = null;
+const hasExtensionRuntime =
+  window.location.protocol === "chrome-extension:" &&
+  typeof chrome !== "undefined" &&
+  Boolean(chrome.runtime?.sendMessage);
+const previewState = hasExtensionRuntime
+  ? ""
+  : new URLSearchParams(window.location.search).get("preview");
 
 const mark = createOllieSvg({ title: "Ollie" });
 mark.setAttribute("width", "48");
@@ -33,6 +40,9 @@ elements.companionMark.append(mark);
 
 elements.form.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (!hasExtensionRuntime) {
+    return;
+  }
   clearError();
   setPending(true);
 
@@ -47,6 +57,9 @@ elements.form.addEventListener("submit", (event) => {
 });
 
 elements.stopButton.addEventListener("click", () => {
+  if (!hasExtensionRuntime) {
+    return;
+  }
   clearError();
   setPending(true);
   sendCommand({ type: MESSAGE_TYPE.STOP_SESSION }).finally(() => setPending(false));
@@ -54,6 +67,9 @@ elements.stopButton.addEventListener("click", () => {
 
 elements.apiKeyForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!hasExtensionRuntime) {
+    return;
+  }
   clearError();
   setPending(true);
 
@@ -80,6 +96,9 @@ elements.apiKeyForm.addEventListener("submit", async (event) => {
 });
 
 elements.removeApiKey.addEventListener("click", async () => {
+  if (!hasExtensionRuntime) {
+    return;
+  }
   clearError();
   setPending(true);
 
@@ -96,15 +115,20 @@ elements.removeApiKey.addEventListener("click", async () => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message) => {
-  if (message?.type === MESSAGE_TYPE.STATE_UPDATED) {
-    appState = message.payload;
-    render();
-  }
-});
+if (hasExtensionRuntime) {
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message?.type === MESSAGE_TYPE.STATE_UPDATED) {
+      appState = message.payload;
+      render();
+    }
+  });
 
-sendCommand({ type: MESSAGE_TYPE.GET_STATE });
-setInterval(renderTimer, 1_000);
+  sendCommand({ type: MESSAGE_TYPE.GET_STATE });
+  setInterval(renderTimer, 1_000);
+} else if (previewState) {
+  appState = createPreviewState(previewState);
+  render();
+}
 
 function sendCommand(message) {
   return new Promise((resolve) => {
@@ -135,7 +159,9 @@ function render() {
 
   const { session, settings } = appState;
   const isActive = session.phase === "focus" || session.phase === "break";
+  const hasApiKey = settings.hasApiKey;
 
+  elements.companionMark.hidden = isActive;
   elements.sessionCard.dataset.phase = session.phase;
   elements.phaseLabel.textContent = getPhaseLabel(
     session.phase,
@@ -144,14 +170,15 @@ function render() {
   elements.currentTask.textContent = isActive
     ? session.task || "Focus session"
     : "Choose one thing to finish.";
-  elements.commentaryStatus.hidden = !isActive;
-  elements.commentaryStatus.textContent = getCommentaryStatus(
-    session.commentarySource,
-  );
-  elements.apiKeyStatus.textContent = settings.hasApiKey
-    ? "Key saved locally"
-    : "No key saved";
-  elements.removeApiKey.hidden = !settings.hasApiKey;
+  const commentaryStatus = getCommentaryStatus(session.commentarySource);
+  elements.commentaryStatus.hidden = !isActive || !commentaryStatus;
+  elements.commentaryStatus.textContent = commentaryStatus;
+  elements.apiKeyForm.dataset.keyState = hasApiKey ? "saved" : "empty";
+  elements.apiKeyStatus.textContent = hasApiKey ? "✓ Saved" : "No key saved";
+  elements.apiKey.hidden = hasApiKey;
+  elements.apiKey.placeholder = "Paste a key to enable task-aware lines";
+  elements.saveApiKey.hidden = hasApiKey;
+  elements.removeApiKey.hidden = !hasApiKey;
   elements.focusMinutes.value = String(settings.focusMinutes);
   elements.breakMinutes.value = String(settings.breakMinutes);
   elements.task.disabled = isActive;
@@ -208,7 +235,7 @@ function getCommentaryStatus(source) {
     return "Ollie is preparing task-aware lines…";
   }
   if (source === "generated") {
-    return "Task-aware lines ready";
+    return "";
   }
   return "Using Ollie's bundled lines";
 }
@@ -221,4 +248,24 @@ function showError(message) {
 function clearError() {
   elements.error.textContent = "";
   elements.error.hidden = true;
+}
+
+function createPreviewState(mode) {
+  const isActive = mode === "saved-active";
+  return {
+    settings: {
+      focusMinutes: 25,
+      breakMinutes: 5,
+      hasApiKey: isActive,
+    },
+    session: {
+      phase: isActive ? "focus" : "idle",
+      phaseEndsAt: isActive ? Date.now() + 24 * 60_000 + 18_000 : null,
+      task: isActive ? "Finish the onboarding flow" : "",
+      commentarySource: isActive ? "generated" : "fallback",
+    },
+    companion: {
+      isDistracted: false,
+    },
+  };
 }

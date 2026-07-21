@@ -12,8 +12,9 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 | 3 — Cross-tab distraction logic | Complete and approved |
 | 4 — GPT-5.6 integration and security | Complete, live-verified, and approved |
 | 5A — Production speech bubble | Complete and approved |
-| 5B — Ollie's states | Next |
+| 5B — Ollie's states | Complete and approved |
 | 5C — Ink polish | Broad polish deferred; approved density adjustment complete |
+| 5D — Final popup UX | Complete and approved |
 
 Unchecked items inside completed milestones remain useful regression scenarios;
 they do not override the recorded human approval for those milestones.
@@ -119,7 +120,7 @@ developed.
 - [ ] A focus session starts when the optional task field is blank.
 - [ ] A blank task makes no OpenAI request and uses the shared bundled lines.
 - [ ] The popup saves the API key to `chrome.storage.local`.
-- [ ] The popup can replace and remove the stored key without reading it back.
+- [ ] The popup can save, remove, and re-add a key without reading it back.
 - [ ] The service worker is the only context that reads the key.
 - [ ] Content-script messages and state never contain the key.
 - [ ] Logs never contain the key or authorization header.
@@ -196,6 +197,50 @@ explicitly deferred.
   unchanged.
 - Hop-cycle poses were not implemented. Ink, timer, commentary
   generation/cache, tab scoping, detection, and privacy logic were unchanged.
+
+## Milestone 5D — Final popup UX
+
+**Status:** Complete and approved on 2026-07-21.
+
+- [X] “Ollie” is the primary heading and “Focus companion” is the subtitle
+      immediately below it.
+- [X] The header Ollie is visible while the session is idle, hidden during both
+      focus and break, and restored when the session returns to idle.
+- [X] The timer card uses reduced padding and typography while keeping phase,
+      countdown, task, and commentary-source text legible.
+- [X] “What are you working on? (optional)” renders as one label line.
+- [X] Popup shell, section, input, duration, action, and API-key spacing are
+      tightened consistently.
+- [X] A missing key shows the original paste-key placeholder, “No key saved,”
+      and a primary “Save key” action.
+- [X] A stored key collapses to a Saved chip and one “Remove key” action; the
+      entry field and Save key action return after removal.
+- [X] Save key and the outlined Remove key action are right-aligned consistently.
+- [X] Saved-key presentation depends on the worker-provided `hasApiKey` boolean;
+      it is not a fixed label and the popup does not read the key back.
+- [X] Read-only local popup review states use the production renderer and do not
+      run when the page has an extension runtime.
+- [ ] Reload the final unpacked extension and recheck save, remove, re-add,
+      start, and stop using real `chrome.storage.local` state.
+
+### Verification record — 2026-07-21 (final popup UX)
+
+- Browser inspection of the production popup confirmed the idle/no-key state
+  contains one visible header Ollie, a primary Save key button, and the original
+  key-entry placeholder.
+- The active/saved production render contains no visible header Ollie, hides the
+  generated-commentary implementation status, and shows only the compact focus
+  timer, Saved chip, and Remove key control.
+- Returning the renderer to idle/no-key restores the header Ollie and initial
+  API-key controls.
+- DOM inspection confirms the task label is one combined line and the large
+  title/subtitle hierarchy is in the requested order.
+- The public state still exposes only `hasApiKey`; no key material or suffix is
+  added to popup/content state, logs, or the preview fixture.
+- Reduced helper/input typography and hidden body overflow keep both states
+  contained without a popup scrollbar.
+- JavaScript syntax and final credential-pattern checks are recorded in
+  `docs/verification-record.md`.
 
 ## Milestone 5C — Ink polish — broadly deferred
 
@@ -367,7 +412,7 @@ Still requires manual verification after loading the unpacked extension in
 Chrome:
 
 - Visually inspect the popup key controls and Ollie speech bubble on real pages.
-- Confirm popup-driven key save, replacement, and removal in extension storage.
+- Confirm popup-driven key save, removal, and re-addition in extension storage.
 - Confirm a blank task starts immediately and shows bundled commentary.
 - Inspect the network panel and all extension/page consoles to confirm one call
   per eligible session, no calls from ticks or state changes, and no key or

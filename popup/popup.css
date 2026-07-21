@@ -11,6 +11,8 @@
 body {
   width: 340px;
   margin: 0;
+  overflow: hidden;
+  font-size: 13px;
 }
 
 button,
@@ -20,17 +22,18 @@ textarea {
 }
 
 .popup-shell {
-  padding: 20px;
+  padding: 14px 16px 16px;
 }
 
 .popup-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  min-height: 42px;
+  margin-bottom: 10px;
 }
 
-.eyebrow,
+.subtitle,
 .phase-label,
 .current-task,
 .commentary-status,
@@ -39,16 +42,16 @@ textarea {
   margin: 0;
 }
 
-.eyebrow {
+.subtitle {
+  margin-top: 3px;
   color: #8d7075;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 650;
+  letter-spacing: 0.02em;
 }
 
 h1 {
-  margin: 2px 0 0;
+  margin: 0;
   font-size: 26px;
   line-height: 1;
 }
@@ -61,10 +64,10 @@ h1 {
 }
 
 .session-card {
-  padding: 16px;
+  padding: 10px 12px;
   border: 1px solid #f0ccca;
   border-radius: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
   background: #ffe9e5;
 }
 
@@ -80,9 +83,9 @@ h1 {
 }
 
 .timer {
-  margin: 4px 0;
+  margin: 1px 0 2px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 38px;
+  font-size: 30px;
   font-weight: 800;
   letter-spacing: -0.05em;
 }
@@ -90,30 +93,38 @@ h1 {
 .current-task {
   overflow: hidden;
   color: #675d63;
-  font-size: 13px;
+  font-size: 12px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .commentary-status {
-  margin-top: 6px;
+  margin-top: 4px;
   color: #8d5960;
   font-size: 11px;
   font-weight: 650;
 }
 
-form > label,
+.task-label,
 .duration-grid > label {
-  display: grid;
-  gap: 7px;
   color: #594d53;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
 }
 
-form > label > span {
+.task-label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.task-label > span {
   color: #8d8085;
   font-weight: 500;
+}
+
+.duration-grid > label {
+  display: grid;
+  gap: 5px;
 }
 
 textarea,
@@ -126,9 +137,11 @@ textarea,
 
 textarea {
   width: 100%;
-  min-height: 66px;
-  padding: 10px 11px;
+  min-height: 50px;
+  padding: 8px 10px;
   resize: none;
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 textarea:focus,
@@ -139,16 +152,16 @@ textarea:focus,
 }
 
 .api-key-card {
-  padding-top: 16px;
+  padding-top: 11px;
   border-top: 1px solid #eadfda;
-  margin-top: 18px;
+  margin-top: 12px;
 }
 
 .api-key-heading {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 7px;
+  margin-bottom: 5px;
 }
 
 .api-key-heading label {
@@ -157,47 +170,57 @@ textarea:focus,
   font-weight: 700;
 }
 
-.api-key-heading span {
+.api-key-status {
+  padding: 3px 6px;
+  border-radius: 999px;
   color: #8d7075;
+  background: #f3e9e5;
   font-size: 10px;
-  font-weight: 650;
+  font-weight: 750;
+}
+
+.api-key-card[data-key-state="saved"] .api-key-status {
+  color: #3c694e;
+  background: #e5f2e9;
 }
 
 .api-key-card input {
   width: 100%;
-  padding: 10px 11px;
+  padding: 8px 10px;
 }
 
 .api-key-note {
-  margin-top: 7px;
+  margin-top: 5px;
   color: #8d8085;
-  font-size: 10px;
+  font-size: 9px;
   line-height: 1.4;
 }
 
 .api-key-actions {
   display: flex;
+  justify-content: flex-end;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 7px;
 }
 
 .api-key-actions button {
-  min-height: 34px;
+  min-height: 30px;
   padding: 0 12px;
   font-size: 11px;
 }
 
 .text-button {
-  border: 0;
+  border: 1px solid #d9ceca;
+  border-radius: 10px;
   color: #8d5960;
-  background: transparent;
+  background: #fff;
 }
 
 .duration-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 9px;
 }
 
 .number-field {
@@ -209,9 +232,10 @@ textarea:focus,
 .number-field input {
   width: 100%;
   min-width: 0;
-  padding: 9px 0;
+  padding: 7px 0;
   border: 0;
   outline: 0;
+  font-size: 12px;
 }
 
 .number-field span {
@@ -221,7 +245,7 @@ textarea:focus,
 }
 
 .error-message {
-  margin-top: 10px;
+  margin-top: 7px;
   color: #a43d45;
   font-size: 12px;
 }
@@ -230,11 +254,11 @@ textarea:focus,
   display: grid;
   grid-template-columns: 1fr;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 10px;
 }
 
 button {
-  min-height: 40px;
+  min-height: 36px;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 750;

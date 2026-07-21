@@ -73,9 +73,8 @@ punitive.
   project-owned server.
 - A server-side or serverless proxy is a production-hardening consideration for
   a later release, not a requirement for the Build Week submission.
-- Draggable positioning with persistence is the next interaction backlog item
-  because the default top-right position can overlap webpage controls; it is
-  not implemented in the current milestone.
+- Basic in-memory dragging is implemented and viewport-clamped. Persistence and
+  a formal home position remain future work.
 
 ## 4. Codex acceleration log
 
@@ -111,6 +110,8 @@ punitive.
 | 2026-07-21 | Character polish — final pose art | Prop contrast, readable hammer arc, engaged laptop, and balanced sleep | Added a dedicated neutral-grey SVG role for props, redrew the hammer pair as raised versus downward impact, gave laptop work a slight lean, directed gaze, and contacting tentacle, and completed the sleeping pose with a visible right curl. Regenerated the production SVGs and retained the existing state timing, alternation, interrupts, and viewport clamping. | Requested this as the final animation-art pass and kept Ollie's canonical body palette and behavior system unchanged. | `content/ollie-grid.js`, `content/overlay.css`, `assets/ollie-poses/*`, `scripts/generate-ollie-pose-assets.js`, `docs/ollie-preview.*`, `README.md`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
 | 2026-07-21 | Character polish — prop clarity | Connected two-tone hammer and light-grey laptop | Added a flat brown handle role, rebuilt both handles as connected two-cell steps from tentacle to head, and lightened the shared silver/grey role used by hammer heads and the laptop shell. Ollie's body art, pose timing, and behavior wiring were unchanged. | Required a zero-gap grip, simple brown-plus-silver hammer readability, and a light-grey laptop icon. | `content/ollie-grid.js`, `content/overlay.css`, `assets/ollie-poses/*`, `scripts/generate-ollie-pose-assets.js`, `docs/ollie-preview.*`, `README.md`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
 | 2026-07-21 | Character polish — display scale | Uniform 10% page-size reduction | Applied one inherited 90% CSS scale to the rendered Ollie SVG across every pose. Preserved all structured grids, SVG viewBoxes, cells, crisp-edge rendering, behavior timing, and asset files. | Requested a final live display-size check rather than another asset pass. | `content/animations.css`, `README.md`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
+| 2026-07-21 | Pre-submission popup | Compact hierarchy and real key states | Reordered the header around Ollie, compacted the timer and form, kept the header character absent only during active sessions, combined the task label, and rendered distinct missing/saved API-key states from the real `hasApiKey` flag without reading the key. The final saved state is intentionally reduced to a Saved chip and right-aligned outlined Remove key action, generated-success plumbing text is hidden, and smaller helper typography keeps the popup scrollbar-free. | Declared the popup pass submission-final, preserved the intentional “Ollie leaves the panel” metaphor, required a genuine but minimal saved-state indicator, and approved the final aligned-button pass. | `popup/popup.html`, `popup/popup.css`, `popup/popup.js`, `README.md`, `docs/manual-test-checklist.md`, `docs/verification-record.md`, `docs/submission-notes.md` |
+| 2026-07-21 | Pre-submission documentation | Final implementation and verification sweep | Reconciled current behavior, animation, drag, ink, GPT-5.6, BYOK, and popup status; added one consolidated verification record with completed, pending, and deferred work. | Requested an accurate final-state documentation pass rather than incremental milestone notes. | `README.md`, `docs/manual-test-checklist.md`, `docs/verification-record.md`, `docs/submission-notes.md` |
 
 ## 5. Human-led decisions
 
@@ -134,16 +135,23 @@ The following were manually reviewed and approved by the project owner:
 - Approval of the production speech bubble after viewport, movement, wrapping,
   and four-orientation verification; Ollie's states were selected next and ink
   polish was deferred.
+- Approval and commit of the production pose, prop, sleeping, ambient-behavior,
+  and 90% display-scale pass; further state and animation improvement moved to
+  future updates.
+- Approval of the final compact popup, including intentional active-session
+  header absence, minimal saved-key state, and right-aligned API actions.
 
 ## 6. Repository and setup checklist
 
 - [ ] Public repository or private repository shared with required judging
       emails.
 - [ ] Relevant licence added.
-- [ ] Final README completed.
-- [ ] Local setup instructions verified.
-- [ ] Extension loading instructions added.
-- [ ] Environment variables documented.
+- [X] Final README completed for the current implementation state.
+- [X] Local unpacked-extension setup instructions documented and previously
+      exercised during milestone verification.
+- [X] Extension loading instructions added.
+- [X] Environment/configuration documented; no environment variable is required
+      because V1.0 uses popup-entered BYOK storage.
 - [ ] Sample data added if required.
 - [ ] Demo video recorded.
 - [ ] Screenshots prepared.
@@ -227,3 +235,4 @@ exploration roles recorded in the Tool usage section.
 - Demo recordings.
 - API integration tests.
 - Final Devpost requirement checklist.
+- Pre-submission verification record.

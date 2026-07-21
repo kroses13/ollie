@@ -11,8 +11,8 @@
     <main class="popup-shell">
       <header class="popup-header">
         <div>
-          <p class="eyebrow">Focus companion</p>
           <h1>Ollie</h1>
+          <p class="subtitle">Focus companion</p>
         </div>
         <div class="companion-mark" id="companion-mark"></div>
       </header>
@@ -25,7 +25,7 @@
       </section>
 
       <form id="session-form">
-        <label for="task">What are you working on? <span>(optional)</span></label>
+        <label class="task-label" for="task">What are you working on? <span>(optional)</span></label>
         <textarea
           id="task"
           name="task"
@@ -61,7 +61,7 @@
       <form class="api-key-card" id="api-key-form">
         <div class="api-key-heading">
           <label for="api-key">OpenAI API key</label>
-          <span id="api-key-status">No key saved</span>
+          <span class="api-key-status" id="api-key-status">No key saved</span>
         </div>
         <input
           autocomplete="off"
@@ -73,7 +73,7 @@
         >
         <p class="api-key-note">Stored locally on this device and read only by Ollie's background worker.</p>
         <div class="api-key-actions">
-          <button class="secondary-button" id="save-api-key" type="submit">Save key</button>
+          <button class="primary-button" id="save-api-key" type="submit">Save key</button>
           <button class="text-button" id="remove-api-key" type="button" hidden>Remove key</button>
         </div>
       </form>
