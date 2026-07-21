@@ -35,26 +35,39 @@ const INK_SPRAY_EVENTS = Object.freeze([
   sprayEvent(3, [
     inkUnit("approved-medium", 69, 49, 3.2, { top: "20px", left: "36px" }),
     inkUnit("approved-medium", 69, 49, 2.8, { top: "80px", left: "120px" }),
+    inkUnit("approved-medium", 69, 49, 3, { top: "210px", left: "8vw" }),
+    inkUnit("approved-medium", 69, 49, 3, { top: "30px", left: "55vw" }),
   ]),
   sprayEvent(4, [
     inkUnit("approved-medium", 69, 49, 3.2, { right: "26px", bottom: "20px" }),
     inkUnit("approved-medium", 69, 49, 2.8, { right: "120px", bottom: "90px" }),
+    inkUnit("approved-medium", 69, 49, 3, { right: "8vw", bottom: "220px" }),
+    inkUnit("approved-medium", 69, 49, 3, { right: "34vw", bottom: "260px" }),
   ]),
   sprayEvent(5, [
     inkUnit("approved-large", 73, 62, 3.36, { bottom: "-130px", left: "50px" }),
     inkUnit("approved-large", 73, 62, 2.8, { bottom: "-40px", left: "150px" }),
+    inkUnit("approved-large", 73, 62, 3.1, { bottom: "150px", left: "24vw" }),
+    inkUnit("approved-large", 73, 62, 3, { top: "42vh", left: "10vw" }),
   ]),
   sprayEvent(6, [
     inkUnit("approved-large", 73, 62, 3.6, { top: "250px", left: "28vw" }),
     inkUnit("approved-large", 73, 62, 3.2, { top: "390px", left: "52vw" }),
+    inkUnit("approved-large", 73, 62, 3.2, { top: "55vh", left: "72vw" }),
+    inkUnit("approved-large", 73, 62, 3.1, { top: "14vh", left: "78vw" }),
+    inkUnit("approved-large", 73, 62, 3.3, { bottom: "8vh", left: "42vw" }),
   ]),
   sprayEvent(7, [
     inkUnit("approved-large", 73, 62, 4.24, { right: "22vw", bottom: "-90px" }),
     inkUnit("approved-large", 73, 62, 3.7, { right: "48vw", bottom: "20px" }),
+    inkUnit("approved-large", 73, 62, 3.4, { right: "8vw", bottom: "180px" }),
+    inkUnit("approved-large", 73, 62, 3.3, { top: "52vh", left: "4vw" }),
+    inkUnit("approved-large", 73, 62, 3.3, { top: "55vh", left: "58vw" }),
   ]),
   sprayEvent(8, [
     inkUnit("approved-large", 73, 62, 4.4, { top: "40px", left: "38vw" }),
     inkUnit("approved-large", 73, 62, 4, { top: "130px", left: "12vw" }),
+    inkUnit("approved-large", 73, 62, 3.6, { top: "32vh", left: "68vw" }),
   ]),
 ]);
 

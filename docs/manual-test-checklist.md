@@ -13,7 +13,7 @@ not be tested; do not claim end-to-end verification without exercising Chrome.
 | 4 — GPT-5.6 integration and security | Complete, live-verified, and approved |
 | 5A — Production speech bubble | Complete and approved |
 | 5B — Ollie's states | Next |
-| 5C — Ink polish | Deferred; no work should begin without renewed approval |
+| 5C — Ink polish | Broad polish deferred; approved density adjustment complete |
 
 Unchecked items inside completed milestones remain useful regression scenarios;
 they do not override the recorded human approval for those milestones.
@@ -49,8 +49,9 @@ they do not override the recorded human approval for those milestones.
 
 ## Milestone 3 — Cross-tab distraction logic
 
-**Status:** Complete and approved. Ink polish is deferred; preserve the current
-approved intervention while Ollie's states are developed.
+**Status:** Complete and approved. A targeted later-density adjustment was
+approved on 2026-07-21; preserve that intervention while Ollie's states are
+developed.
 
 - [ ] Exact distraction hosts and intended subdomains match.
 - [ ] Lookalike hosts such as `notreddit.com` do not match.
@@ -65,8 +66,8 @@ approved intervention while Ollie's states are developed.
       through warning-wait and every attack phase, and clears only on idle.
 - [ ] Attack does not begin before the configured six-second grace period.
 - [ ] Leaving during the grace period cancels all pending attack phases.
-- [ ] Staying triggers approximately 8–12%, then 15–20%, then 30–35%
-      viewport splatter coverage.
+- [ ] Staying preserves Phase 1 near its approved baseline, then reaches
+      approximately 22% in Phase 2 and 48% in Final.
 - [ ] Each choreography spray reveals only its bounded event group rather than
       revealing a full phase simultaneously.
 - [ ] Ollie moves inward before spraying and the first attack marks originate
@@ -88,9 +89,9 @@ approved intervention while Ollie's states are developed.
 - [ ] The ink field does not capture pointer or keyboard interaction.
 - [ ] Reduced-motion mode removes character and splatter motion while preserving
       paced decisions, spray progression, and intervention stages.
-- [ ] The attack reuses its fixed pool of twenty splatter SVG elements across
-      eight spray events, allocated 4/4/2/2/2/2/2/2, plus forty bounded offset
-      droplets created once with the field.
+- [ ] The attack reuses its fixed pool of 33 splatter SVG elements across eight
+      spray events, allocated 4/4/4/4/4/5/5/3, plus 66 bounded offset droplets
+      created once with the field.
 - [ ] `docs/distraction-preview.html` exposes idle, warning, phase one, phase
       two, and final states without duplicating production rendering logic.
 - [ ] The preview's real-timing sequence follows the configured 6s → 4s → 4s
@@ -150,11 +151,29 @@ bubble or ink system while this work is in progress.
 - [ ] Ollie does not block ordinary page interaction.
 - [ ] A typical site, an SPA, and a restricted Chrome page fail or render cleanly.
 
-## Milestone 5C — Ink polish — deferred
+## Milestone 5C — Ink polish — broadly deferred
 
-**Status:** Deferred. The current approved canonical splatters, allocation,
-coverage behavior, choreography, cancellation, and timing remain unchanged.
-Do not start another ink refinement pass until it is explicitly rescheduled.
+**Status:** A narrowly approved density adjustment is complete. Phase 2 now
+adds 12 units across its unchanged three spray events, and Final adds 13 more
+across its unchanged three events. Canonical artwork, choreography,
+cancellation, timing, Warning, and Phase 1 are unchanged. Do not start further
+visual ink refinement until it is explicitly rescheduled.
+
+### Verification record — 2026-07-21 (density adjustment)
+
+- The existing eight spray events and all intervention timing remain unchanged.
+- Event allocation changed from `4/4/2/2/2/2/2/2` to
+  `4/4/4/4/4/5/5/3`; all added elements reuse the approved canonical Medium or
+  Large SVGs and the existing horizontal-flip/jitter system.
+- Nine randomized Phase 2 preview runs measured a 22.81% mean, with a
+  21.18–24.90% observed range. This is approximately 8.84 percentage points
+  above the previous 13.97% reference baseline.
+- Six randomized Final preview runs after final tuning measured a 48.48% mean,
+  with a 47.06–50.17% observed range. This is approximately 16.35 percentage
+  points above the previous 32.13% reference baseline.
+- Warning, Phase 1, phase durations, spray-event count, choreography,
+  cancellation, tab scoping, detection, privacy behavior, and SVG silhouettes
+  were not modified.
 
 ## Verification record — 2026-07-20
 

@@ -39,8 +39,10 @@ remain sequenced for Milestone 5.
 Implementation proceeds only after approval for each milestone.
 
 Milestones 1–4 and the production speech-bubble slice are implemented and
-approved. Ollie's state work is next. A further ink-polish pass has been
-explicitly deferred.
+approved. Ollie's state work is next. A broad ink-polish pass remains deferred;
+a separately approved density adjustment raised Phase 2 by approximately eight
+coverage points and Final by approximately sixteen points without changing the
+canonical artwork or intervention sequence.
 
 The first Character Polish slice is complete: the temporary
 commentary box has been replaced by a reusable coded speech bubble matching the

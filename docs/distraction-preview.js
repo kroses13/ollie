@@ -26,15 +26,16 @@ const STATE_DETAILS = Object.freeze({
   },
   "attack-two": {
     title: "Attack · phase 2",
-    coverage: "Randomized baseline · mean 13.97% ink",
+    coverage: "Updated target · approximately 22% ink",
     description:
-      "Three sprays add two widely spread Medium or Large units each.",
+      "Three sprays add four widely spread Medium or Large units each.",
   },
   "attack-final": {
     title: "Attack · final phase",
-    coverage: "Randomized baseline · mean 32.13% ink",
+    coverage: "Updated target · approximately 48% ink",
     description:
-      "Three sprays add six varied Large units for a stronger final escalation.",
+      "Three sprays add thirteen varied Large units for a stronger " +
+      "final escalation.",
   },
 });
 
