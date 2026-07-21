@@ -1,126 +1,66 @@
 # Ollie
 
-Ollie is a Manifest V3 Chrome extension companion that lives at the edge of
-ordinary webpages. During focus sessions, the pixel-grid octopus works quietly,
-reacts when the active tab drifts to a distraction site, and sleeps during
-breaks.
+Ollie is a tiny octopus focus companion who lives at the edge of your browser.
+Start a focus session and he quietly works alongside you, chats about your task,
+and gets mischievous when you wander onto a distracting site. During breaks, he
+settles down to sleep.
 
-## Status
+## Quickstart
 
-The submission build includes the approved Core Shell, cross-tab distraction
-intervention, live-verified GPT-5.6 commentary, production speech bubble, basic
-dragging, and production character-state pass. Normalized hostname matching,
-focused-window and active-tab tracking, tab-specific state broadcasts, and
-Ollie's two-stage warning and gradually accumulating pixel-ink intervention are
-present. During attack phases Ollie
-travels through deliberate viewport waypoints, anticipates each spray, and
-inspects the result before relocating. His warning mark remains on the viewport
-and accumulates beneath the later attack. The live attack uses the approved
-canonical Small, Medium, and Large SVG splatters, scaled without changing their
-artwork. Each attack receives a fresh seeded layout with varied position,
-horizontal mirroring, and satellite-droplet offsets. Units are approximately
-20% smaller, while the Final phase adds more units for a clearer escalation.
+1. Click the green **Code** button at the top of this repository, then
+   **Download ZIP**. Unzip the downloaded file.
+2. Open `chrome://extensions` in Chrome.
+3. Enable **Developer mode**.
+4. Choose **Load unpacked**.
+5. Select the unzipped repository folder.
+6. Open Ollie from the extensions menu and start a focus session.
 
-Task-aware commentary now uses a single session-start request to
-`gpt-5.6-luna` when both an optional task and a locally stored BYOK key are
-present. The worker validates and caches the strict structured response for the
-whole session. A blank task, missing key, timeout, HTTP error, offline state, or
-malformed response all use the same bundled Ollie lines without preventing the
-timer from starting. The production character library now also includes the
-approved looking-left, looking-right, thinking, holding-hammer, hammer-strike,
-laptop-work, and sleeping poses.
-The final popup pass makes Ollie the primary header title, compacts the timer and
-form, keeps the header character visible only while no session is active, and
-shows genuinely different missing-key and saved-key states. This layout is
-approved for the submission build. Celebration and
-colour variants remain explicitly deferred beyond the submission build.
+Ollie appears on eligible HTTP and HTTPS pages. The task field and OpenAI API
+key are optional; without them, the timer, companion behaviours, distraction
+detection, and bundled dialogue continue to work normally.
 
-## Planned milestones
+No build step, no dependencies to install — the folder loads directly.
+
+## Demo
+
+**Demo video:** Public link pending final recording.
+
+In the meantime, the repository includes working
+[visual and interaction previews](#visual-and-interaction-previews) for Ollie,
+the distraction sequence, speech bubble, and popup.
+
+## What is included
+
+- Focus and break timers that continue when the popup is closed.
+- An original pixel-art companion with idle, thinking, working, sleeping, and
+  directional-looking states.
+- A character-led distraction intervention: warning, grace period, movement,
+  and progressively accumulating pixel ink.
+- Correct focused-window and active-tab behaviour across multiple tabs.
+- Basic drag repositioning within the current page lifetime.
+- A viewport-aware speech bubble that follows Ollie and supports every side.
+- Optional task-aware GPT-5.6 commentary with bundled fallback dialogue.
+- A compact popup with optional task input and clear API-key saved state.
+
+## Submission status
+
+All currently planned submission milestones are implemented and approved:
 
 1. Scaffold
 2. Core shell
-3. Cross-tab distraction logic
-4. GPT-5.6 integration and BYOK security
-5. Break/celebrate states, colour variants, and polish
+3. Cross-tab distraction and ink intervention
+4. GPT-5.6 integration and locally stored API-key handling
+5. Character polish — speech bubble, production states, dragging, and popup UX
 
-Implementation proceeds only after approval for each milestone.
+The GPT integration was verified live with a real user key and task-specific
+output. The final popup, character states, drag behaviour, speech bubble, and
+approved ink intervention have also completed manual review. Celebration
+presentation and colour variants remain intentionally deferred.
 
-Milestones 1–4, the production speech bubble, dragging, and the production
-pose/ambient-behavior pass are implemented and approved. The final pose-art pass
-closes the submission animation scope. A broad
-ink-polish pass remains deferred; a separately approved
-density adjustment raised Phase 2 by approximately eight coverage points and
-Final by approximately sixteen points without changing the canonical artwork
-or intervention sequence.
-
-The first Character Polish slice is complete: the temporary
-commentary box has been replaced by a reusable coded speech bubble matching the
-approved frame, with denser rounded pixel corners, a lower depth accent, white
-fill, centred text-and-sparkle composition, four pointer positions, and yellow
-or grey sparkle palettes. The bubble now measures available viewport space on
-every visible frame, selects the best of Ollie's four sides, switches its tail,
-and clamps itself inside a 12px safe margin. It is mounted beside Ollie in the
-same moving stage, so future hops and dragging can move the anchor while the
-bubble follows. Ink rendering, intervention choreography, timers, session
-state, and GPT generation were not changed in this slice.
-
-Ollie also supports basic in-memory repositioning. Click and hold the character,
-drag him to another visible point, and release to leave him there. The position
-is clamped to the current viewport and remains the base for idle and speech
-behavior. When a distraction warning begins, Ollie immediately resets to the
-original top-right anchor before the existing attack choreography runs, keeping
-the tested ink origin intact. This pass deliberately does not persist a home
-position or change the existing behavior state machine.
-
-Ollie's seven additional production poses are hand-authored role grids and
-checked in as reusable SVGs under `assets/ollie-poses/`. Non-prop poses retain
-the canonical 24×18 canvas. Hammer poses use 32×18 and the laptop uses 36×18 so
-Ollie's body cells remain at the same scale and proportions while props occupy
-their own space. Hammer heads and laptop panels use a dedicated light
-neutral-grey prop role; hammer handles use a separate flat brown role, leaving
-Ollie's body palette untouched. The hammer pair
-now reads as a raised ready position followed by a downward impact angle; the
-laptop pose leans and looks toward the screen with a tentacle placed at the
-work surface, and the sleeping silhouette has a balanced right-hand curl.
-During an undistracted
-focus session he occasionally looks left or right and, every randomized 45–90
-seconds, alternates naturally between laptop work and a two-pose hammer action.
-New commentary uses a thinking → speaking sequence before the existing bubble
-appears. Break start immediately interrupts ambient work and transitions to
-sleeping; returning to focus wakes Ollie. Pose changes use a short anticipation
-→ action → settle treatment without changing timer, commentary, distraction, or
-ink logic. Each prop-pose footprint triggers the existing viewport clamp so the
-wider canvas remains visible at either edge.
-The shared page renderer applies a uniform 90% display scale to the SVG in
-every pose without changing the authored grids, viewBoxes, or pixel geometry.
-
-## Technical constraints
-
-- Chrome Extension Manifest V3
-- Vanilla HTML, CSS, and JavaScript
-- No build tooling or runtime dependencies
-- Pixel-grid inline SVG; no companion image assets
-- Background service worker as the single source of truth
-- Shadow DOM isolation for the webpage overlay
-- User-supplied OpenAI key stored only in `chrome.storage.local`
-
-## Loading the scaffold
-
-1. Open `chrome://extensions`.
-2. Enable **Developer mode**.
-3. Choose **Load unpacked**.
-4. Select this repository directory.
-
-Start a focus session from the popup to show Ollie on eligible HTTP and HTTPS
-pages. The service worker owns phase deadlines and transitions focus to break,
-then back to idle.
-
-The task field is optional. To enable task-aware commentary, paste an OpenAI API
-key into the popup and choose **Save key**. The popup never reads a saved key
-back from storage; it receives only a `hasApiKey` status flag. When that flag is
-true, the popup shows a Saved chip and a single Remove key action; removing the
-key restores the entry field and Save key action. Starting with a blank task
-deliberately skips the API request and uses bundled commentary.
+Detailed implementation decisions, measurements, and choreography notes are in
+[Architecture and implementation notes](docs/architecture-notes.md). Approval
+history and reusable regression checks are in the
+[verification record](docs/manual-test-checklist.md).
 
 ## OpenAI API key setup
 
@@ -158,10 +98,8 @@ Treat it like a password: do not post it publicly or share it with anyone.
 
 ### Ollie still works without an API key
 
-An API key is optional.
-
-Without one, Ollie's core companion features continue to work normally,
-including:
+An API key is optional. Without one, Ollie's core companion features continue
+to work normally, including:
 
 - focus and break timers
 - distraction detection
@@ -172,6 +110,21 @@ including:
 Adding a key only enables personalised commentary generated for the task and
 focus-session context you provide.
 
+The popup never reads a saved key back from storage; it receives only a
+`hasApiKey` status flag. A saved key is represented by a Saved chip and a
+Remove key action. Starting with a blank task deliberately skips the API
+request and uses bundled commentary.
+
+## Technical constraints
+
+- Chrome Extension Manifest V3
+- Vanilla HTML, CSS, and JavaScript
+- No build tooling or runtime dependencies
+- Pixel-grid inline SVG; no companion raster sprites
+- Background service worker as the single source of truth
+- Shadow DOM isolation for the webpage overlay
+- User-supplied OpenAI key stored only in `chrome.storage.local`
+
 ## Repository layout
 
 - `background/` — service worker, sessions, tab monitoring, and OpenAI client
@@ -179,83 +132,58 @@ focus-session context you provide.
 - `content/` — webpage overlay, pixel geometry, and animation styles
 - `popup/` — extension popup UI
 - `shared/` — shared constants, state, messages, storage, and validation
-- `docs/` — approved visual reference, comparison preview, and manual checklist
+- `docs/` — visual references, previews, architecture, and verification records
 
-## Ollie asset preview
+## Visual and interaction previews
 
-Serve the repository from any local static server, then open
-`docs/ollie-preview.html`. For example:
+Serve the repository from a local static server:
 
 ```sh
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-Then visit `http://127.0.0.1:4173/docs/ollie-preview.html`.
+Then open:
 
-To assess the distraction intervention, open
-`http://127.0.0.1:4173/docs/distraction-preview.html`. The page provides direct
-controls for idle, warning, and all three attack phases, plus a real-timing
-escalation sequence. Its live intent readout exposes the choreography for review,
-and the controls can be collapsed so Ollie's full viewport path remains visible.
-The same page reports true visible ink coverage after clipping and overlap.
+- [Ollie poses and character states](http://127.0.0.1:4173/docs/ollie-preview.html)
+- [Distraction intervention](http://127.0.0.1:4173/docs/distraction-preview.html)
+- [Production speech bubble](http://127.0.0.1:4173/docs/speech-bubble-preview.html)
+- [Production ink library](http://127.0.0.1:4173/docs/ink-preview.html)
+- [Popup — idle and no key](http://127.0.0.1:4173/popup/popup.html?preview=empty)
+- [Popup — active session and saved key](http://127.0.0.1:4173/popup/popup.html?preview=saved-active)
 
-To review the production speech bubble, open
-`http://127.0.0.1:4173/docs/speech-bubble-preview.html`. The preview accepts
-dynamic text, switches among left, right, top, and bottom pointer placements,
-switches the sparkle palette, and includes a 200% inspection view. Its
-attachment lab moves Ollie to edges and corners, simulates travel while he is
-speaking, and offers wide, narrow, and compact viewport bounds.
-
-The positioning controller compares the available space on each side of
-Ollie's current bounding box, prefers a side that fits the 240×104 natural
-frame, and uses a small orientation hysteresis to prevent tail flicker. If no
-side fits at natural size, it scales the coded frame to the available bounds;
-the final position is clamped inside the viewport. Tracking runs only while a
-message is preparing, visible, or dismissing. Commentary waits briefly for
-hop/land/aim/spray behavior to settle, then follows an anticipation → stepped
-entrance → length-aware reading pause → stepped dismissal sequence.
-
-The controller receives plain commentary text only. Generated and fallback
-lines share the same renderer, while the current working state intentionally
-uses the schema's `idle` pair. Celebration text is presentation-ready for the
-future phase; adding that phase remains Milestone 5 state-machine work. If a
-future implementation replaces Ollie's anchor element rather than moving it,
-the controller must be recreated with the replacement anchor.
-
-To inspect the production popup without changing extension storage, open
-`popup/popup.html?preview=empty` for the idle/no-key state or
-`popup/popup.html?preview=saved-active` for the active/saved-key state. These
-read-only local review modes use the same popup renderer as the extension; the
-normal `chrome-extension://` popup always uses real worker state.
+These pages use the production renderers. They provide direct state controls,
+editable speech, edge and corner checks, coverage measurement, and read-only
+popup states without changing extension storage.
 
 ## Roadmap
 
 V1.0 uses BYOK (user-supplied OpenAI API key, stored locally, never sent
-server-side). A production release would move this behind a proxy so users don't
-need their own API key — noted here as a known next step, not a limitation we're
-unaware of.
+server-side). A production release would move this behind a proxy so users
+don't need their own API key — noted here as a known next step, not a limitation
+we're unaware of.
 
 For V1.0, only the background service worker reads the saved key and calls the
 OpenAI Responses API. The key and authorization header are never included in
 content-script state or logs. BYOK in `chrome.storage.local` is an MVP tradeoff,
 not secure secret storage.
 
-Basic dragging is implemented without persistence. A later interaction
-milestone may persist Ollie's position or introduce a formal home position;
-neither is part of the current build.
+Optional future improvements include:
 
-The hop-cycle poses shown on the production model sheet remain deferred roadmap
-work and are not part of the submission animation set.
+- further ink polish
+- additional animation refinement and character states, including hop and
+  celebration presentation
+- colour variants
+- persistent dragging and a formal home-position system
+- a production API proxy
 
-Future updates may further refine animation timing and expand Ollie's character
-states after the submission build; this is planned polish, not functionality
-claimed as complete here.
+None of these are claimed as part of the completed submission build.
 
 ## Documentation
 
+- [Architecture and implementation notes](docs/architecture-notes.md)
 - [Submission and build notes](docs/submission-notes.md)
 - [Pre-submission verification record](docs/verification-record.md)
-- [Manual test checklist](docs/manual-test-checklist.md)
+- [Milestone history and regression checklist](docs/manual-test-checklist.md)
 - [Ollie asset comparison](docs/ollie-preview.html)
 - [Production ink library](docs/ink-preview.html)
 - [Distraction intervention preview](docs/distraction-preview.html)

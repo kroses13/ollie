@@ -1,533 +1,268 @@
-# Manual test checklist
+# Ollie verification record
 
-Use this checklist after implementing each milestone. Record anything that could
-not be tested; do not claim end-to-end verification without exercising Chrome.
+This document records the completed submission milestones, the evidence used to
+approve them, and the regression scenarios worth repeating after future
+changes. Unchecked boxes appear only in the regression section; they are not
+statements about current milestone completion.
 
-## Current milestone sequence
+## Submission status
 
-| Milestone | Status |
-|---|---|
-| 1 — Scaffold | Complete and approved |
-| 2 — Core shell | Complete and approved |
-| 3 — Cross-tab distraction logic | Complete and approved |
-| 4 — GPT-5.6 integration and security | Complete, live-verified, and approved |
-| 5A — Production speech bubble | Complete and approved |
-| 5B — Ollie's states | Complete and approved |
-| 5C — Ink polish | Broad polish deferred; approved density adjustment complete |
-| 5D — Final popup UX | Complete and approved |
+| Milestone | Status | Approval |
+|---|---|---|
+| 1 — Scaffold | Complete | Approved 2026-07-19 |
+| 2 — Core shell | Complete | Approved 2026-07-20 |
+| 3 — Cross-tab distraction and ink intervention | Complete | Approved 2026-07-20; final density adjustment approved 2026-07-21 |
+| 4 — GPT-5.6 integration and BYOK security | Complete and live-verified | Approved 2026-07-21 |
+| 5A — Production speech bubble | Complete | Approved 2026-07-21 |
+| 5B — Character states, props, and ambient behaviour | Complete | Approved 2026-07-21 |
+| 5C — Basic drag repositioning | Complete | Approved 2026-07-21 |
+| 5D — Final popup UX | Complete | Approved 2026-07-21 |
 
-Unchecked items inside completed milestones remain useful regression scenarios;
-they do not override the recorded human approval for those milestones.
+The currently planned submission milestones are complete. Optional additions
+are listed separately under Future Improvements.
 
 ## Milestone 1 — Scaffold
 
-**Status:** Complete and approved.
+The repository was established as a directly loadable Manifest V3 Chrome
+extension using vanilla HTML, CSS, and JavaScript, with no build step or runtime
+dependencies.
 
-- [X] `manifest.json` parses successfully.
-- [X] The repository loads as an unpacked extension.
-- [X] The placeholder popup opens.
-- [X] The service-worker console has no startup errors.
-- [X] No secret or local environment file is tracked.
+Verification summary:
+
+- `manifest.json` parsed and the unpacked extension loaded successfully.
+- The popup and service worker started without startup errors.
+- Repository structure, `.gitignore`, implementation guidance, and manual
+  verification documentation were established before feature work.
+- No credential or local environment file was committed.
 
 ## Milestone 2 — Core shell
 
-**Status:** Complete and approved. Unchecked items remain regression checks.
+The service worker owns focus/break timestamps and alarms; the popup sends
+commands; the content script renders one Shadow DOM companion on eligible HTTP
+and HTTPS pages.
 
-- [ ] The approved reference appears beside the production SVG in the preview.
-- [ ] The neutral SVG matches the approved silhouette, proportions, expression,
-      and palette as closely as practical on the fixed grid.
-- [ ] The 24px, 32px, and 48px previews have crisp pixel edges.
-- [ ] The action tentacle is a separate `#ollie-action-tentacle` SVG group.
-- [ ] Changing Ollie CSS variables recolours the expected pixel roles.
-- [ ] Start and stop a focus session from the popup.
-- [ ] Timer state is derived from a stored end timestamp.
-- [ ] The alarm completes the focus phase after the popup closes.
-- [ ] Stored timestamps provide best-effort recovery after a worker restart.
-- [ ] Exactly one Shadow DOM root appears on each eligible page.
-- [ ] Host-page CSS does not visibly alter Ollie.
-- [ ] Ollie renders as pixel-grid SVG and plays the idle animation.
-- [ ] Reloading or SPA navigation does not create duplicate roots.
+Verification summary:
 
-## Milestone 3 — Cross-tab distraction logic
+- Fixed-time checks produced the expected focus → break → idle sequence.
+- Timer rendering derives from stored absolute end timestamps rather than a
+  long-running authoritative interval.
+- Best-effort recovery uses stored session timestamps.
+- The approved Ollie reference was reproduced as a structured 24×18 SVG role
+  grid with integer `<rect>` cells and `crispEdges`.
+- Reference, 24px, 32px, and 48px previews confirmed the production silhouette
+  and hard pixel treatment.
+- The action tentacle remains an independently targetable SVG group.
+- Shadow DOM styling, duplicate-root prevention, and passive page interaction
+  are implemented in the production content script.
 
-**Status:** Complete and approved. A targeted later-density adjustment was
-approved on 2026-07-21; preserve that intervention while Ollie's states are
-developed.
+## Milestone 3 — Cross-tab distraction and ink intervention
 
-- [ ] Exact distraction hosts and intended subdomains match.
-- [ ] Lookalike hosts such as `notreddit.com` do not match.
-- [ ] A matching active tab in the focused window enters attack state.
-- [ ] A matching background tab remains idle.
-- [ ] Switching tabs updates both the old and new tab correctly.
-- [ ] Switching Chrome windows updates Ollie correctly.
-- [ ] Updating an active tab's URL updates Ollie correctly.
-- [ ] Warning starts with a restless gesture and one approved Medium splatter
-      near Ollie; its visible coverage remains below 5%.
-- [ ] The warning splatter appears at the spray moment, remains stationary
-      through warning-wait and every attack phase, and clears only on idle.
-- [ ] Attack does not begin before the configured six-second grace period.
-- [ ] Leaving during the grace period cancels all pending attack phases.
-- [ ] Staying preserves Phase 1 near its approved baseline, then reaches
-      approximately 22% in Phase 2 and 48% in Final.
-- [ ] Each choreography spray reveals only its bounded event group rather than
-      revealing a full phase simultaneously.
-- [ ] Ollie moves inward before spraying and the first attack marks originate
-      near him, so movement and ink read as one action.
-- [ ] After the warning, Ollie leaves the top-right corner and uses short,
-      stepped hops between deliberate viewport waypoints.
-- [ ] Each stop reads as think → hop → land → aim → spray → inspect before the
-      next relocation begins.
-- [ ] Phase one completes both character-led sprays before its four-second phase
-      ends; phase two completes all three before its four-second phase ends.
-- [ ] Later phases shorten the average think, travel, and inspection cadence so
-      Ollie appears increasingly confident rather than merely adding more ink.
-- [ ] At least two relocations briefly pass behind existing ink before Ollie
-      emerges to aim and spray.
-- [ ] Every attack mark is an SVG made from crisp square cells with a stepped
-      silhouette; there are no rounded blobs, gradients, blur, or soft edges.
-- [ ] Leaving the tab/domain or ending focus immediately hides all attack ink.
-- [ ] Repeated distracted-state broadcasts do not restart the grace period.
-- [ ] The ink field does not capture pointer or keyboard interaction.
-- [ ] Reduced-motion mode removes character and splatter motion while preserving
-      paced decisions, spray progression, and intervention stages.
-- [ ] The attack reuses its fixed pool of 33 splatter SVG elements across eight
-      spray events, allocated 4/4/4/4/4/5/5/3, plus 66 bounded offset droplets
-      created once with the field.
-- [ ] `docs/distraction-preview.html` exposes idle, warning, phase one, phase
-      two, and final states without duplicating production rendering logic.
-- [ ] The preview's real-timing sequence follows the configured 6s → 4s → 4s
-      escalation and can be cancelled from its control panel.
-- [ ] The preview reports Ollie's current intent and its panel can collapse so
-      bottom-edge and behind-ink travel remain visible.
+Distraction state is derived from normalized hostnames and is valid only for
+the active tab in the focused Chrome window during a focus session. The
+approved intervention uses a warning grace period followed by three
+character-led escalation phases.
 
-### Interaction scope
+Verification summary:
 
-- [X] Click-and-hold dragging repositions Ollie in real time and clamps the
-      released character within the visible viewport.
-- [X] Existing idle and speech behavior continues from the current dragged
-      position without rewiring choreography state.
-- [X] A distraction warning resets Ollie to the original anchor before the
-      unchanged attack choreography begins.
-- [X] Reloading resets Ollie to the normal default position; no drag position is
-      persisted in this pass.
-- [ ] Optionally persist Ollie's position and introduce a formal home-position
-      concept in a later approved milestone.
+- Exact and deliberate subdomain matches passed for the configured services;
+  lookalikes such as `notreddit.com` and `youtube.com.example.org` remained
+  on-task.
+- State projection marked only the focused active tab as distracted; background
+  tabs and break state remained idle.
+- `tabs.onActivated`, `tabs.onUpdated`, and `windows.onFocusChanged` are wired
+  through the worker-owned tab context.
+- A controllable clock confirmed the 6s warning grace period followed by 4s and
+  4s escalation intervals. Repeated state broadcasts did not restart the
+  intervention, and leaving the tab/domain or stopping focus cancelled it.
+- Warning ink persists through later phases and clears when the intervention
+  ends.
+- Eight bounded spray events reuse a fixed pool of 33 approved SVG units and 66
+  offset droplets; no continuous DOM creation occurs.
+- Canonical ink uses flat opaque outline/base/shade colours, integer cells,
+  horizontal mirroring only, and no gradients, blur, or rotation.
+- The approved density adjustment retained Warning and Phase 1 behaviour. Nine
+  randomized Phase 2 samples averaged 22.81% visible coverage; six Final
+  samples averaged 48.48%.
+- Choreography follows notice → warning → think → hop → aim → spray → inspect,
+  with later phases increasing Ollie's confidence and cadence.
+- The overlay remains non-interactive, and reduced-motion rules preserve state
+  progression without continuous movement.
+- `docs/distraction-preview.html` exercises production rendering, direct phase
+  controls, cancellation, full timing, and visible-union coverage measurement.
 
-## Milestone 4 — GPT-5.6 integration and security
+## Milestone 4 — GPT-5.6 integration and BYOK security
 
-**Status:** Complete, live-verified with a real key, and approved.
+Task-aware commentary is an optional enhancement. A nonblank task may trigger
+one `gpt-5.6-luna` request at session start; a blank task or any request failure
+uses the same bundled fallback without blocking the timer.
 
-- [ ] A focus session starts when the optional task field is blank.
-- [ ] A blank task makes no OpenAI request and uses the shared bundled lines.
-- [ ] The popup saves the API key to `chrome.storage.local`.
-- [ ] The popup can save, remove, and re-add a key without reading it back.
-- [ ] The service worker is the only context that reads the key.
-- [ ] Content-script messages and state never contain the key.
-- [ ] Logs never contain the key or authorization header.
-- [ ] At most one commentary request occurs per session start.
-- [X] The request uses `gpt-5.6-luna` and the exact greeting/idle/distracted/
-      break/celebrate structured schema.
-- [ ] Valid generated lines are cached and displayed as text.
-- [ ] Animation ticks, phase changes, and tab changes do not make another call.
-- [ ] Missing key, timeout, HTTP failure, or malformed output uses bundled lines.
-- [ ] An OpenAI failure does not prevent the focus session from starting.
+Verification summary:
+
+- The strict cached schema contains one greeting, two idle lines, two
+  distracted lines, two break lines, and one celebration line.
+- Simulated blank-task and missing-key sessions made no request and used bundled
+  commentary.
+- Valid simulated output produced exactly one request and remained cached across
+  animation, phase, tab, and window updates.
+- Offline, HTTP-error, invalid-JSON, malformed-schema, and timeout paths all
+  resolved through the same fallback.
+- A live unpacked-Chrome session with a real user key produced
+  `commentarySource: generated`; all eight returned lines were confirmed to be
+  specific to the supplied task. No real key, task, or generated copy is stored
+  in this repository.
+- The popup writes the user key to `chrome.storage.local`; only the service
+  worker reads it. Content state exposes only `hasApiKey`.
+- Credential, authorization-header, and complete-request logging are absent.
 
 ## Milestone 5A — Production speech bubble
 
-**Status:** Complete and approved on 2026-07-21. The detailed verification
-record appears at the end of this document.
+The temporary commentary box was replaced by a coded, dynamic pixel speech
+bubble that treats generated and fallback text identically.
 
-## Milestone 5B — Ollie's states
+Verification summary:
 
-**Status:** Production pose and ambient-behavior pass implemented on 2026-07-21.
-Celebration and colour variants remain separate work; the hop cycle is
-explicitly deferred.
+- The 120×52 integer SVG frame preserves the approved outline, rounded stepped
+  corners, white fill, lower depth accent, and yellow/grey sparkle treatment.
+- Dynamic copy is inserted through `textContent`; long text wraps without
+  clipping and generated/fallback content uses the same renderer.
+- Left, right, top, and bottom tails were verified at viewport edges and
+  corners with a 12px safe margin.
+- The controller selects available space, avoids Ollie when practical, follows
+  his live bounding box, and uses orientation hysteresis to prevent flicker.
+- Speech waits for unstable movement states to settle, then follows
+  anticipation → entrance → reading pause → dismissal.
+- `docs/speech-bubble-preview.html` retains editable text, all orientations,
+  both sparkle palettes, compact bounds, edge/corner checks, and movement
+  verification.
 
-- [ ] Focus completion triggers celebration once.
-- [X] Idle/work has a readable neutral behavior and does not compete with the
-      page.
-- [X] Distracted behavior communicates notice, warning, and increasing
-      confidence without changing intervention timing or ink allocation.
-- [X] Break state interrupts ambient work, uses the sleeping pose, and continues
-      to display cached break lines.
-- [ ] Celebration reads as a distinct one-time state and uses the cached
-      celebration line.
-- [ ] Session completion returns Ollie to the intended idle state.
-- [X] State transitions do not leave stale transforms, bubbles, or temporary
-      character attributes behind.
-- [X] Speech waits for a stable character moment and remains attached during
-      movement in every state.
-- [X] Basic dragging moves the current character host without changing state
-      transitions, timers, commentary, or intervention behavior.
-- [ ] Every colour changes body cells without separate companion assets.
-- [ ] Changing colour persists and updates open tabs.
-- [ ] Ollie does not block ordinary page interaction.
-- [ ] A typical site, an SPA, and a restricted Chrome page fail or render cleanly.
+## Milestone 5B — Character states, props, and ambient behaviour
 
-### Verification record — 2026-07-21 (production poses and ambient behavior)
+Ollie's approved production state set is implemented without changing the
+canonical base scale or palette.
 
-- References 5, 6, 7, 8, 9, 10, and 12 were reproduced as hand-authored SVG
-  rect grids using the current production Ollie palette and proportions.
-- Non-prop poses stay on the canonical 24×18 canvas. Holding/strike use 32×18
-  and laptop uses 36×18, preserving Ollie's body cells at the same scale while
-  giving each prop independent space.
-- The asset preview displays the approved model sheet and all seven generated
-  poses together; all SVG cells are integer-aligned and use `crispEdges`.
-- The production behavior controller showed thinking before the existing speech
-  bubble, then returned to idle while the commentary remained visible.
-- Shortened preview-only timing observed idle looks, laptop, holding-hammer,
-  hammer-strike, and idle through the same production controller.
-- Starting break while a hammer pose was active changed immediately to sleeping;
-  returning to focus restored idle.
-- Production timing retains the requested randomized 45–90 second laptop delay.
-- The live footprint check passed all six left/right edge combinations across
-  holding-hammer, hammer-strike, and laptop using the production drag clamp.
-- Final pose-art pass assigns laptop panels and hammer heads to a dedicated
-  light neutral-grey role and hammer handles to a flat brown role while leaving
-  every body role and colour unchanged.
-- Holding and strike now show distinct raised and downward-impact hammer angles;
-  both handles use connected two-cell steps with no gap from the gripping
-  tentacle. Laptop work uses a slight body lean, rightward gaze, and a tentacle
-  contacting the light-grey work surface; sleeping includes a visible outlined
-  curl on the right.
-- The final preview re-ran the six prop/edge clamp cases after the larger-canvas
-  artwork changed.
-- The live SVG uses one inherited 90% CSS display scale across idle, look,
-  thinking, hammer, laptop, and sleeping poses; grid data and viewBoxes remain
-  unchanged.
-- Hop-cycle poses were not implemented. Ink, timer, commentary
-  generation/cache, tab scoping, detection, and privacy logic were unchanged.
+Verification summary:
+
+- Hand-authored grids cover looking left, looking right, thinking, holding a
+  hammer, hammer strike, laptop work, and sleeping.
+- Non-prop poses retain the 24×18 canvas. Hammer poses use 32×18 and laptop work
+  uses 36×18 so props do not compress Ollie's body.
+- Hammer heads and laptop panels use neutral grey; connected hammer handles use
+  a separate flat brown role. The laptop pose includes a working lean and
+  contacting tentacle; sleeping has a balanced right curl.
+- Ambient focus behaviour randomizes directional looks and alternates laptop
+  and two-pose hammer work every 45–90 seconds.
+- Thinking precedes speech. Distraction, break, and other higher-priority states
+  interrupt ambient work immediately.
+- Break enters sleeping; returning to focus wakes Ollie and restores idle.
+- All six left/right prop-edge footprint checks passed using the production
+  viewport clamp.
+- One inherited CSS scale renders every page pose at 90% without altering grid
+  data, viewBoxes, or `crispEdges`.
+- `docs/ollie-preview.html` retains the approved model sheet, pose comparison,
+  live controller, speech sequence, and edge checks.
+
+## Milestone 5C — Basic drag repositioning
+
+Ollie can be repositioned for the current page lifetime without introducing a
+persistent home-position system.
+
+Verification summary:
+
+- Pointer dragging updates Ollie's position in real time and clamps release to
+  the viewport.
+- A live drag moved Ollie independently of choreography transforms; extreme
+  top-left and bottom-right drags clamped correctly.
+- Idle and speech continue from the dragged position.
+- Distraction restores the canonical top-right attack anchor before running the
+  unchanged intervention choreography.
+- Reloading restores the default position; no drag coordinate is persisted.
 
 ## Milestone 5D — Final popup UX
 
-**Status:** Complete and approved on 2026-07-21.
+The popup is compact, reflects real session/key state, and preserves the
+intentional metaphor that Ollie leaves the panel while working on the page.
 
-- [X] “Ollie” is the primary heading and “Focus companion” is the subtitle
-      immediately below it.
-- [X] The header Ollie is visible while the session is idle, hidden during both
-      focus and break, and restored when the session returns to idle.
-- [X] The timer card uses reduced padding and typography while keeping phase,
-      countdown, task, and commentary-source text legible.
-- [X] “What are you working on? (optional)” renders as one label line.
-- [X] Popup shell, section, input, duration, action, and API-key spacing are
-      tightened consistently.
-- [X] A missing key shows the original paste-key placeholder, “No key saved,”
-      and a primary “Save key” action.
-- [X] A stored key collapses to a Saved chip and one “Remove key” action; the
-      entry field and Save key action return after removal.
-- [X] Save key and the outlined Remove key action are right-aligned consistently.
-- [X] Saved-key presentation depends on the worker-provided `hasApiKey` boolean;
-      it is not a fixed label and the popup does not read the key back.
-- [X] Read-only local popup review states use the production renderer and do not
-      run when the page has an extension runtime.
-- [ ] Reload the final unpacked extension and recheck save, remove, re-add,
-      start, and stop using real `chrome.storage.local` state.
+Verification summary:
 
-### Verification record — 2026-07-21 (final popup UX)
+- Ollie is the primary heading and Focus companion is the subtitle.
+- Header Ollie is visible only while idle, hidden during focus and break, and
+  restored after stop or completion.
+- Timer card, task input, duration controls, helper copy, and vertical spacing
+  fit without a popup scrollbar.
+- The optional task label appears on one line.
+- Missing-key state shows the entry field, No key saved chip, and right-aligned
+  primary Save key action.
+- Saved-key state derives from `hasApiKey` and collapses to a Saved chip plus a
+  right-aligned outlined Remove key action. The popup never reads the key back.
+- Generated-success implementation text is hidden; only useful pending/fallback
+  feedback remains available.
+- Read-only local review states use the production renderer for idle/no-key and
+  active/saved inspection without changing extension storage.
 
-- Browser inspection of the production popup confirmed the idle/no-key state
-  contains one visible header Ollie, a primary Save key button, and the original
-  key-entry placeholder.
-- The active/saved production render contains no visible header Ollie, hides the
-  generated-commentary implementation status, and shows only the compact focus
-  timer, Saved chip, and Remove key control.
-- Returning the renderer to idle/no-key restores the header Ollie and initial
-  API-key controls.
-- DOM inspection confirms the task label is one combined line and the large
-  title/subtitle hierarchy is in the requested order.
-- The public state still exposes only `hasApiKey`; no key material or suffix is
-  added to popup/content state, logs, or the preview fixture.
-- Reduced helper/input typography and hidden body overflow keep both states
-  contained without a popup scrollbar.
-- JavaScript syntax and final credential-pattern checks are recorded in
-  `docs/verification-record.md`.
+## Regression checklist
 
-## Milestone 5C — Ink polish — broadly deferred
+Repeat the relevant checks after future changes. Record the date and result in
+the pull request, release notes, or a new verification entry rather than
+changing completed milestone status.
 
-**Status:** A narrowly approved density adjustment is complete. Phase 2 now
-adds 12 units across its unchanged three spray events, and Final adds 13 more
-across its unchanged three events. Canonical artwork, choreography,
-cancellation, timing, Warning, and Phase 1 are unchanged. Do not start further
-visual ink refinement until it is explicitly rescheduled.
+### Extension lifecycle and page safety
 
-### Verification record — 2026-07-21 (density adjustment)
+- [ ] Load/reload the unpacked extension and inspect worker/page consoles.
+- [ ] Start and stop focus from the popup; allow an alarm to complete while the
+      popup is closed.
+- [ ] Suspend/restart the worker or browser and confirm best-effort timestamp
+      recovery.
+- [ ] Confirm exactly one Shadow DOM root on a typical site and an SPA after
+      navigation/reinjection.
+- [ ] Confirm host CSS cannot restyle Ollie and restricted Chrome pages fail
+      quietly.
+- [ ] Confirm passive overlays do not block ordinary pointer or keyboard use.
 
-- The existing eight spray events and all intervention timing remain unchanged.
-- Event allocation changed from `4/4/2/2/2/2/2/2` to
-  `4/4/4/4/4/5/5/3`; all added elements reuse the approved canonical Medium or
-  Large SVGs and the existing horizontal-flip/jitter system.
-- Nine randomized Phase 2 preview runs measured a 22.81% mean, with a
-  21.18–24.90% observed range. This is approximately 8.84 percentage points
-  above the previous 13.97% reference baseline.
-- Six randomized Final preview runs after final tuning measured a 48.48% mean,
-  with a 47.06–50.17% observed range. This is approximately 16.35 percentage
-  points above the previous 32.13% reference baseline.
-- Warning, Phase 1, phase durations, spray-event count, choreography,
-  cancellation, tab scoping, detection, privacy behavior, and SVG silhouettes
-  were not modified.
+### Cross-tab distraction
 
-### Verification record — 2026-07-21 (basic drag repositioning)
+- [ ] Exercise exact matches, intended subdomains, and lookalike false positives.
+- [ ] Switch tabs and Chrome windows; confirm only the focused active tab can
+      attack and every background tab remains idle.
+- [ ] Navigate the active tab into and out of a distracting hostname.
+- [ ] Leave during warning and during each attack phase; confirm immediate
+      cancellation and ink removal.
+- [ ] Confirm repeated state broadcasts do not restart warning or escalation.
+- [ ] Recheck reduced-motion pacing and representative viewport coverage.
 
-- The production drag controller listens only on Ollie's 96×72 character area;
-  the surrounding host remains non-interactive.
-- A live drag moved Ollie from `[1168, 76]` to `[352, 284]` without modifying
-  the stage's choreography transform values.
-- Top-left and bottom-right over-drag checks clamped the character to
-  `[0, 0, 96, 72]` and `[1184, 648, 1280, 720]` respectively.
-- Reloading returned Ollie to the normal top-right position, confirming that no
-  position is stored.
-- After dragging Ollie away from the top-right corner, starting the real
-  escalation restored the original anchor before the warning choreography ran.
-- The existing warning, phase timing, movement choreography, and ink positioning
-  then continued from the canonical anchor without modification.
-- No timer, commentary generation/cache, intervention, ink, hostname, tab, or
-  session-state logic was changed.
+### Commentary and secret handling
 
-## Verification record — 2026-07-20
+- [ ] Start with a blank task and confirm no OpenAI request occurs.
+- [ ] Save, remove, and re-add a key through the popup without logging it.
+- [ ] Run one task-aware session and confirm exactly one request and cached
+      task-specific lines.
+- [ ] Exercise missing-key, invalid-key, offline, timeout, and malformed-output
+      fallback while preserving the active focus session.
+- [ ] Inspect worker, popup, page, state, and network views for key or
+      authorization-header exposure.
 
-Core Shell checks completed in the implementation environment:
+### Character presentation
 
-- Manifest JSON, JavaScript syntax, SVG XML, and Git whitespace checks pass.
-- Fixed-timestamp transition checks produce `focus`, then `break`, then `idle`.
-- The packaged popup layout and approved Ollie mark render correctly in a
-  browser preview.
-- Runtime source contains none of the deferred polish-pass concepts.
+- [ ] Recheck all production poses, prop-edge clamping, and 90% display scale.
+- [ ] Confirm ambient laptop/hammer work is interrupted by distraction and break.
+- [ ] Drag to all viewport edges, speak from the dragged position, then confirm
+      distraction resets to the attack anchor.
+- [ ] Recheck short/long speech at each edge and corner.
+- [ ] Confirm sleeping/wake and idle restoration after stop or completion.
 
-Still requires manual verification after loading the unpacked extension in
-Chrome:
+### Popup
 
-- Alarm behavior while the popup is closed.
-- Best-effort recovery after suspending the service worker or restarting Chrome.
-- Shadow DOM injection, one-root enforcement, and idle bob on real host pages.
-- Focus-to-break broadcast updates across already-open eligible tabs.
-- Service-worker and content-script console inspection.
+- [ ] Verify idle, focus, break, and stopped header-character visibility in the
+      unpacked extension.
+- [ ] Verify empty-key and saved-key controls against real local storage.
+- [ ] Confirm optional blank task, compact layout, and scrollbar-free rendering.
 
-## Verification record — 2026-07-20 (Milestone 3)
+## Future Improvements
 
-Checks completed in the implementation environment:
+These are intentionally outside the completed submission milestones:
 
-- Exact and subdomain matches pass for YouTube, Youtu.be, X, Twitter, Reddit,
-  Instagram, and TikTok.
-- Lookalike domains such as `notreddit.com` and `youtube.com.example.org` remain
-  on-task.
-- A fixed state projection marks only the focused active tab as distracted.
-- The same active distraction state projects as idle for a background tab and
-  during a break phase.
-- Manifest JSON, JavaScript syntax, and Git whitespace checks pass.
-- A controllable-clock check confirms warning → first phase → second phase →
-  final phase timing at 6s, 4s, and 4s.
-- Repeated distracted states do not restart the warning timer, and clearing the
-  state cancels a pending warning or active attack immediately.
-- Runtime construction is bounded to twenty reusable authored SVG units and
-  forty small offset satellite droplets across the same eight spray events;
-  the overlay remains non-interactive and keeps the reduced-motion ruleset.
-- The live renderer uses only the approved canonical Small, Medium, and Large
-  assets. Every asset retains flat opaque fills and
-  `shape-rendering="crispEdges"`; scale changes do not alter their silhouettes.
-- A 120-layout true visible-union sample at 1280×900 measured mean coverage of
-  6.05% first-phase, 13.97% second-phase, and 32.13% final-phase. Observed
-  ranges were 5.70–6.22%, 12.54–15.05%, and 29.41–35.05%. The randomized
-  warning averaged 0.66% and remained below 0.8% in the sample.
-- The same randomized sample measured mean 6.30% / 13.26% / 29.71% at
-  1024×768 and 6.28% / 14.46% / 33.12% at 1440×900.
-- The preview's live readout draws the actual rendered SVG assets into a
-  sampling canvas with their current translation and horizontal mirroring, so
-  overlapping opaque pixels count once rather than adding nominal asset areas.
-- A state-selector audit confirms the stationary warning mark is hidden during
-  notice/aim, appears on warning spray, persists through inspect/warning-wait
-  and `attack-one`/`attack-two`/`attack-final`, then clears on idle. It is the
-  same asset, scale, and position as the first Phase 1 unit, so persistence does
-  not change the confirmed attack-phase coverage union.
-- All three canonical ink assets use `#100d11` outline, `#4a414d` base, and
-  `#29222c` shade. Their approved cell layout, shading, protrusions, satellite
-  droplets, and proportions are unchanged by integration.
-- Each new warning run generates and records a fresh local layout seed. Units
-  in the same event use stratified angles and wider Phase 2 radii, while units
-  from different events remain free to overlap. Only static transforms and a
-  bounded droplet pool are used; no recurring DOM creation is introduced.
-- Computed animation checks confirm both ear groups share the same synchronized
-  effort animation during Phase 2 aim and spray moments.
-- A permanent distraction preview now provides direct state toggles and a
-  cancellable real-timing sequence using the production renderer, ink pool,
-  animation styles, and timing constants.
-- A timed browser trace confirms `think → hop → aim → spray → inspect`, one
-  bounded event-group reveal per spray, two early events in 3.18s, three middle
-  events in 3.74s, and an
-  immediate reset to the home position with zero visible marks on cancellation.
-- A full real-timing preview remains in warning with zero large splatters at 5s,
-  then finishes all eight sprays away from the home corner by 17.7s.
-- Reduced-motion emulation disables the stage transition and character
-  animation while preserving the same two-mark phase-one progression.
-- Page controls remained clickable during the final phase, and cancelling the
-  distracted state removed the ink within the configured fade window.
-
-Still requires manual verification after loading the unpacked extension in
-Chrome:
-
-- `tabs.onActivated` returns the previous tab to idle and reacts only in the new
-  active tab.
-- `tabs.onUpdated` reacts when the focused active tab enters or leaves a listed
-  hostname.
-- `windows.onFocusChanged` clears the reaction when Chrome loses focus and
-  restores the correct state in the newly focused Chrome window.
-- Repeated distracted-state broadcasts do not restart the grace period.
-- Background tabs continue the normal idle bob throughout tab and window
-  switches.
-- Reduced-motion behavior remains static while preserving warning and
-  escalation timing.
-- Confirm the refined coverage and event-by-event accumulation in an unpacked
-  Chrome run on representative real webpages.
-
-## Verification record — 2026-07-20 (Milestone 4)
-
-Checks completed in the implementation environment:
-
-- A simulated extension-worker run accepted a blank task, started focus, used
-  the bundled commentary, and made zero API requests.
-- The same simulation confirmed a nonblank task with no stored key uses the
-  identical bundled fallback and makes zero API requests.
-- Saving a test-only placeholder key, starting a nonblank task, and returning a
-  valid structured response produced exactly one request and cached the
-  generated lines in the session.
-- Removing the key cleared its dedicated `chrome.storage.local` entry and
-  updated only the public `hasApiKey` metadata flag.
-- Local storage access is restricted to trusted extension contexts. The popup
-  writes but never reads the key, then sends the worker a key-free status
-  command; only the worker reads the stored value.
-- Serialized popup/content state did not contain the test-only key. Source
-  inspection and the message simulation confirm neither state nor runtime
-  commands contain it, and the storage read/request call sites are reachable
-  only from the background worker.
-- The request body uses `gpt-5.6-luna` and a strict schema containing
-  `greeting`, two `idle` lines, two `distracted` lines, two `break` lines, and
-  `celebrate`.
-- Mocked offline, HTTP-error, invalid-JSON, and malformed-schema responses were
-  rejected at the same client boundary and handled by the worker's one fallback
-  path.
-- A hanging mocked request was aborted by the configured 8,000ms timeout.
-- JavaScript syntax, manifest JSON, Git whitespace, and credential-pattern
-  scans pass.
-
-Still requires manual verification after loading the unpacked extension in
-Chrome:
-
-- Visually inspect the popup key controls and Ollie speech bubble on real pages.
-- Confirm popup-driven key save, removal, and re-addition in extension storage.
-- Confirm a blank task starts immediately and shows bundled commentary.
-- Inspect the network panel and all extension/page consoles to confirm one call
-  per eligible session, no calls from ticks or state changes, and no key or
-  authorization-header logging.
-- Exercise an invalid key and offline mode in Chrome and confirm both preserve
-  the active focus session while showing the bundled-line status.
-
-## Verification record — 2026-07-21 (Milestone 4 live approval)
-
-The project owner completed a live unpacked-Chrome session with a real
-user-supplied key and a nonblank task:
-
-- The stored `commentarySource` was inspected through the service-worker
-  console and confirmed as `generated`, not `fallback`.
-- All eight cached lines were inspected: one greeting, two idle, two
-  distracted, two break, and one celebrate line.
-- The generated lines were confirmed to reference the submitted task rather
-  than reading as generic commentary.
-- This verifies that `gpt-5.6-luna` accepted the live request, the task text was
-  part of the request, the strict response passed validation, and the result
-  was cached in the active session.
-- No real key, task text, or generated line content is reproduced in this
-  repository record.
-
-Milestone 4 was manually approved after this verification. Unchecked scenarios
-above remain useful regression checks and are not implied by this approval.
-
-## Character Polish — production speech bubble
-
-**Status:** Complete and approved on 2026-07-21.
-
-- [X] The coded frame matches the approved reference's near-black keyline,
-      denser rounded pixel corners, solid white fill, and cool-grey lower depth
-      accent.
-- [X] The canonical component orientation keeps its stepped pointer on the
-      lower-left edge.
-- [X] Left, right, top, and bottom pointer geometry allows the bubble to occupy
-      any of Ollie's four sides without rotating the text.
-- [X] Commentary and the sparkle form one centred content group inside the
-      bubble.
-- [X] The two-tone pixel sparkle supports yellow and grey palettes, appears for
-      short commentary, and remains clear of the text.
-- [X] Long commentary uses the wider interior, hides the decorative sparkle,
-      wraps naturally, and remains fully inside the frame without clipping.
-- [X] Commentary is inserted only through `textContent` and updates without
-      recreating the component.
-- [X] Generated and fallback commentary render identically; the bubble receives
-      plain text and has no source-specific presentation branch.
-- [X] Greeting, idle/working, distracted, break, and celebration commentary all
-      select the expected cached line shape.
-- [X] The appearance sequence reads as anticipation → stepped entrance →
-      readable pause → stepped dismissal without flicker.
-- [X] A bubble requested during hop, land, emerge, aim, or spray waits briefly
-      for a stable character moment before entering.
-- [X] At each viewport edge, the controller selects a fitting top, bottom, left,
-      or right position and changes the tail to point back toward Ollie.
-- [X] Edge and corner placements remain within the 12px viewport safe margin
-      and do not overlap Ollie when another side can fit.
-- [X] Long and short copy remain readable in wide, narrow, and compact bounds;
-      the frame and tail do not overflow the viewport.
-- [X] While Ollie's anchor moves, the visible bubble follows continuously and
-      recalculates its side without becoming fixed to the old viewport point.
-- [X] `docs/speech-bubble-preview.html` supports editable copy, all four pointer
-      positions, both sparkle palettes, production size, a 200% inspection
-      view, edge/corner movement, and wide/narrow/compact bounds.
-- [X] Ink behavior, intervention timing, Ollie choreography, GPT generation,
-      timer authority, and the session state machine remain unchanged.
-
-### Verification record — 2026-07-21
-
-Checks completed in the implementation environment:
-
-- The refined production component renders from a 120×52 integer SVG viewBox
-  at exactly two CSS pixels per grid unit, with
-  `shape-rendering="crispEdges"`; outline, depth, fill, and sparkle remain
-  separate coded layers.
-- Browser inspection confirmed the 240×104 production render and its 200%
-  scale preserve the stepped silhouette and hard pixel edges.
-- Left, right, top, and bottom controls each reveal exactly one matching coded
-  tail group without rotating or transforming the text.
-- Computed layout checks confirm the content group and bubble share the same
-  horizontal centre, with both flex alignment and text alignment set to centre.
-- Yellow and grey sparkle controls switch the palette without rebuilding the
-  component.
-- Live preview input updated both component instances through `textContent`.
-- A 119-character sample switched to the long-copy layout, hid the sparkle,
-  wrapped with no horizontal or vertical text overflow, and remained inside
-  the coded frame at a compact 196×84 render.
-- Automated browser geometry checks placed Ollie at the left, right, top, and
-  bottom edges. The bubble selected right/left/bottom/top respectively, used
-  the matching inward-facing tail, remained fully contained, and did not
-  overlap Ollie.
-- Compact top-left and bottom-right corner checks remained contained and
-  selected bottom/top placement with matching top/bottom tails.
-- The attachment lab verifies the same plain-text renderer independently of
-  commentary source. Runtime selection covers greeting, the idle pair used for
-  working, distracted, break, and the presentation-ready celebration string.
-- Tracking uses Ollie's live `getBoundingClientRect()` while the bubble is
-  visible, with a 12px safe margin, 8px anchor gap, and 48px orientation
-  hysteresis. It is requestAnimationFrame-bound and stops after dismissal.
-- Seven samples taken during a stepped cross-canvas trip remained inside the
-  preview bounds and did not overlap Ollie, including the live right-to-left
-  tail handoff.
-- The bubble and Ollie are siblings in the same stage. Moving or dragging the
-  existing anchor is supported; replacing the anchor node requires recreating
-  the controller.
-- The preview's “Speak after hop” control holds the bubble through a simulated
-  unstable behavior, then permits the normal anticipation and entrance after
-  the stage returns to idle.
-- JavaScript syntax, manifest JSON, SVG XML, and Git whitespace checks pass.
-
-Optional regression checks after future state work:
-
-- Compare the production and 200% views directly with the approved reference.
-- Inspect the production bubble beside Ollie in the unpacked extension on
-  representative webpages.
-- Confirm the anticipation, reading pause, and natural dismissal subjectively
-  match Ollie's character in a live focus session.
+- Further ink polish beyond the approved submission baseline.
+- Additional character animation refinement and expanded states, including a
+  hop cycle and celebration presentation.
+- Colour variants.
+- Persistent drag position and a formal home-position system.
+- A production proxy so users do not need to supply their own OpenAI API key.
