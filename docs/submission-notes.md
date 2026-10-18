@@ -112,6 +112,7 @@ punitive.
 | 2026-07-21 | Character polish — display scale | Uniform 10% page-size reduction | Applied one inherited 90% CSS scale to the rendered Ollie SVG across every pose. Preserved all structured grids, SVG viewBoxes, cells, crisp-edge rendering, behavior timing, and asset files. | Requested a final live display-size check rather than another asset pass. | `content/animations.css`, `README.md`, `docs/manual-test-checklist.md`, `docs/submission-notes.md` |
 | 2026-07-21 | Pre-submission popup | Compact hierarchy and real key states | Reordered the header around Ollie, compacted the timer and form, kept the header character absent only during active sessions, combined the task label, and rendered distinct missing/saved API-key states from the real `hasApiKey` flag without reading the key. The final saved state is intentionally reduced to a Saved chip and right-aligned outlined Remove key action, generated-success plumbing text is hidden, and smaller helper typography keeps the popup scrollbar-free. | Declared the popup pass submission-final, preserved the intentional “Ollie leaves the panel” metaphor, required a genuine but minimal saved-state indicator, and approved the final aligned-button pass. | `popup/popup.html`, `popup/popup.css`, `popup/popup.js`, `README.md`, `docs/manual-test-checklist.md`, `docs/verification-record.md`, `docs/submission-notes.md` |
 | 2026-07-21 | Pre-submission documentation | Final implementation and verification sweep | Reconciled current behavior, animation, drag, ink, GPT-5.6, BYOK, and popup status; added one consolidated verification record with completed, pending, and deferred work. | Requested an accurate final-state documentation pass rather than incremental milestone notes. | `README.md`, `docs/manual-test-checklist.md`, `docs/verification-record.md`, `docs/submission-notes.md` |
+| 2026-10-18 | Public release preparation | Friend-ready repository documentation | Added a split licence (MIT code and CC BY-NC-ND 4.0 artwork), a plain-language privacy notice, permission rationale, a short end-to-end test drive, known limitations, and factual human/AI contribution notes. Rechecked the repository for secrets and public-release hygiene before publishing. | Requested that Ollie become a public repository so friends can install and try it while retaining protection for the character artwork. | `LICENSE`, `LICENSE-ASSETS.md`, `PRIVACY.md`, `README.md`, `docs/submission-notes.md` |
 
 ## 5. Human-led decisions
 
@@ -143,9 +144,10 @@ The following were manually reviewed and approved by the project owner:
 
 ## 6. Repository and setup checklist
 
-- [ ] Public repository or private repository shared with required judging
-      emails.
-- [ ] Relevant licence added.
+- [X] Public repository prepared for friend testing; visibility change is part
+      of the 2026-10-18 publication step.
+- [X] Split licence added: MIT for software code and CC BY-NC-ND 4.0 for
+      Ollie's original artwork and visual identity.
 - [X] Final README completed for the current implementation state.
 - [X] Local unpacked-extension setup instructions documented and previously
       exercised during milestone verification.
