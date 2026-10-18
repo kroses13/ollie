@@ -5,10 +5,15 @@ Start a focus session and he quietly works alongside you, chats about your task,
 and gets mischievous when you wander onto a distracting site. During breaks, he
 settles down to sleep.
 
+**Current public preview:**
+[Ollie v0.1.0](https://github.com/kroses13/ollie/releases/tag/v0.1.0) ·
+[Download the Chrome extension ZIP](https://github.com/kroses13/ollie/releases/download/v0.1.0/ollie-v0.1.0.zip)
+
 ## Quickstart
 
-1. Click the green **Code** button at the top of this repository, then
-   **Download ZIP**. Unzip the downloaded file.
+1. Download
+   [`ollie-v0.1.0.zip`](https://github.com/kroses13/ollie/releases/download/v0.1.0/ollie-v0.1.0.zip)
+   from the first public pre-release, then unzip it.
 2. Open `chrome://extensions` in Chrome.
 3. Enable **Developer mode**.
 4. Choose **Load unpacked**.
@@ -20,6 +25,9 @@ key are optional; without them, the timer, companion behaviours, distraction
 detection, and bundled dialogue continue to work normally.
 
 No build step, no dependencies to install — the folder loads directly.
+
+Developers who want the complete source, visual references, and project notes
+can instead use **Code → Download ZIP** or clone the repository.
 
 ### A quick test drive
 
@@ -65,6 +73,9 @@ All currently planned submission milestones are implemented and approved:
 3. Cross-tab distraction and ink intervention
 4. GPT-5.6 integration and locally stored API-key handling
 5. Character polish — speech bubble, production states, dragging, and popup UX
+
+The friend-testing build is published as the
+[`v0.1.0` pre-release](https://github.com/kroses13/ollie/releases/tag/v0.1.0).
 
 The GPT integration was verified live with a real user key and task-specific
 output. The final popup, character states, drag behaviour, speech bubble, and
